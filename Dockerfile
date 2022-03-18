@@ -23,7 +23,10 @@ RUN apt update && apt install -y \
 
 RUN apt-get update && apt-get install -y python3-opencv
 RUN pip install opencv-python &&  \
-    pip install matplotlib
+    pip install matplotlib 
+
+RUN apt install -y python3-tk
+
 
 COPY ./ros_entrypoint.sh /
 RUN chmod +x /ros_entrypoint.sh
