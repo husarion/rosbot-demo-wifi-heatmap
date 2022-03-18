@@ -5,14 +5,15 @@ from rclpy.action import ActionClient
 from nav2_msgs.action import NavigateThroughPoses
 from geometry_msgs.msg import PoseStamped
 #Utils
+import tkinter
 import matplotlib.pyplot as plt
 import cv2
 import yaml
 from collections import namedtuple
 
+
 #Named tuple representing a single waypoint
 Waypoint = namedtuple('Waypoint','x y')
-
 
 class NavigateThroughPosesClient(Node):
     def __init__(self,yaml_path:str,density:int,collision_range:int):
@@ -63,7 +64,6 @@ class NavigateThroughPosesClient(Node):
 #########DEBUG################        
         for waypoint in valid_waypoint_array:   
             self.map[waypoint.x,waypoint.y] = [0,255,0] #Mark valid waypoints
-            self.map[int(self.origin.x * self.resolution)][int(self.origin.x * self.resolution)] = [0,0,255] #Display robot's origin
         plt.imshow(self.map) #Display map
         plt.show()
 #########DEBUG################  
