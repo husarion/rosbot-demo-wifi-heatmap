@@ -24,12 +24,14 @@ def show_map(map):
 Waypoint = namedtuple('Waypoint','x y')
 
 class NavigateThroughPosesClient(Node):
-    def __init__(self,yaml_path:str,density:int,collision_range:int):
+    def __init__(self,yaml_path:str):
         super().__init__('navigate_through_poses_client')
         self._action_client = ActionClient(self,NavigateThroughPoses,'/navigate_through_poses')
 #User params:
-        self.density = density
-        self.collision_range = collision_range
+        self.declare_parameter('density',5)
+        self.declare_parameter('collision_range',3)
+        self.density = self.get_parameter('density').get_parameter_value().integer_value
+        self.collision_range = self.get_parameter('collision_range').get_parameter_value().integer_value
 #Map params:
         with open(yaml_path,'r') as file:
             data = yaml.safe_load(file)
@@ -100,7 +102,7 @@ class NavigateThroughPosesClient(Node):
 
 def main(args = None):
     rclpy.init(args=args)
-    action_client = NavigateThroughPosesClient('/map/map.yaml',5,3)
+    action_client = NavigateThroughPosesClient('/map/map.yaml')
     future = action_client.send_goal()
     print("goal sent")
     rclpy.spin_until_future_complete(action_client,future)
