@@ -1,4 +1,6 @@
 #ROS
+import imp
+from numpy import block
 import rclpy
 from rclpy.node import Node
 from rclpy.action import ActionClient
@@ -10,6 +12,12 @@ import matplotlib.pyplot as plt
 import cv2
 import yaml
 from collections import namedtuple
+from multiprocessing import Process
+
+
+def show_map(map):
+    plt.imshow(map)
+    plt.show()
 
 
 #Named tuple representing a single waypoint
@@ -47,10 +55,10 @@ class NavigateThroughPosesClient(Node):
             waypoint.pose.orientation.z = 0.
             waypoint.pose.orientation.w = 1.
             goals.append(waypoint)
-
         msg.poses = goals
+        print('waiting for server')
         self._action_client.wait_for_server()
-        # return self._action_client.send_goal_async(msg)
+        return self._action_client.send_goal_async(msg)
     
     def set_waypoints(self):
         waypoint_array = []
@@ -64,8 +72,8 @@ class NavigateThroughPosesClient(Node):
 #########DEBUG################        
         for waypoint in valid_waypoint_array:   
             self.map[waypoint.x,waypoint.y] = [0,255,0] #Mark valid waypoints
-        plt.imshow(self.map) #Display map
-        plt.show()
+        p = Process(target=show_map,args=(self.map,)) #Show valid waypoints in different process (app doesn't block)
+        p.start()
 #########DEBUG################  
 # Set proper waypoint coordinates based on map params
         for waypoint in valid_waypoint_array:
@@ -79,7 +87,6 @@ class NavigateThroughPosesClient(Node):
             print('='*20)
 ########DEBUG################  
             self.robot_frame_waypoint_array.append(world_frame_waypoint)
-
 
     def check_safety(self,waypoint:Waypoint): #method for checking if selected waypoint is close to occupied or unknown space
         xbegin,xend = waypoint.x - self.collision_range,waypoint.x + self.collision_range
