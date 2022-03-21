@@ -69,7 +69,7 @@ class NavigateThroughPosesClient(Node):
                     waypoint_array.append(Waypoint(i,j))
 # create array of valid waypoints based on collision_range param         
         valid_waypoint_array = [waypoint for waypoint in waypoint_array if self.check_safety(waypoint)]
-        valid_waypoint_array= valid_waypoint_array #DEBUG get only one waypoint
+        valid_waypoint_array= valid_waypoint_array #DEBUG get only one waypoint !nodebug!
 #########DEBUG################        
         for waypoint in valid_waypoint_array:   
             self.map[waypoint.x,waypoint.y] = [0,255,0] #Mark valid waypoints
