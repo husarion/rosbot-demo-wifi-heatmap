@@ -1,6 +1,4 @@
 #ROS
-import imp
-from numpy import block
 import rclpy
 from rclpy.node import Node
 from rclpy.action import ActionClient
@@ -15,10 +13,9 @@ from collections import namedtuple
 from multiprocessing import Process
 
 
-def show_map(map):
+def show_map(map): # Function displaying map of waypoints
     plt.imshow(map)
     plt.show()
-
 
 #Named tuple representing a single waypoint
 Waypoint = namedtuple('Waypoint','x y')
@@ -72,16 +69,19 @@ class NavigateThroughPosesClient(Node):
                     waypoint_array.append(Waypoint(i,j))
 # create array of valid waypoints based on collision_range param         
         valid_waypoint_array = [waypoint for waypoint in waypoint_array if self.check_safety(waypoint)]
+        valid_waypoint_array= valid_waypoint_array #DEBUG get only one waypoint
 #########DEBUG################        
         for waypoint in valid_waypoint_array:   
             self.map[waypoint.x,waypoint.y] = [0,255,0] #Mark valid waypoints
+        self.map[len(self.map) - 1][0] = [0,0,255] #DEBUG show map origin
+        self.map[len(self.map - 1) - int(abs(self.origin.y / self.resolution))][int(abs(self.origin.x / self.resolution))] = [0,0,255] #DEBUG show robot origin
         p = Process(target=show_map,args=(self.map,)) #Show valid waypoints in different process (app doesn't block)
         p.start()
 #########DEBUG################  
 # Set proper waypoint coordinates based on map params
         for waypoint in valid_waypoint_array:
-            x = waypoint.x * self.resolution + self.origin.x
-            y = waypoint.y * self.resolution + self.origin.y
+            x = waypoint.y * self.resolution + self.origin.x
+            y = (len(self.map - 1) - waypoint.x) * self.resolution + self.origin.y
             world_frame_waypoint = Waypoint(x,y)
 ########DEBUG################
             print('='*20)
