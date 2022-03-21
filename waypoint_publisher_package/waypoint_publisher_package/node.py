@@ -2,7 +2,7 @@
 import rclpy
 from rclpy.node import Node
 from rclpy.action import ActionClient
-from nav2_msgs.action import NavigateThroughPoses
+from nav2_msgs.action import FollowWaypoints
 from geometry_msgs.msg import PoseStamped
 #Utils
 import tkinter
@@ -20,10 +20,10 @@ def show_map(map): # Function displaying map of waypoints
 #Named tuple representing a single waypoint
 Waypoint = namedtuple('Waypoint','x y')
 
-class NavigateThroughPosesClient(Node):
+class FollowWaypointsClient(Node):
     def __init__(self):
         super().__init__('navigate_through_poses_client')
-        self._action_client = ActionClient(self,NavigateThroughPoses,'/navigate_through_poses')
+        self._action_client = ActionClient(self,FollowWaypoints,'/follow_waypoints')
 #User params:
         self.declare_parameter('density',5)
         self.declare_parameter('collision_range',3)
@@ -41,7 +41,7 @@ class NavigateThroughPosesClient(Node):
 
     def send_goal(self):
         self.set_waypoints()
-        msg = NavigateThroughPoses.Goal()
+        msg = FollowWaypoints.Goal()
         goals = []
         for waypoint_ in self.robot_frame_waypoint_array:
             waypoint = PoseStamped()
@@ -103,7 +103,7 @@ class NavigateThroughPosesClient(Node):
 
 def main(args = None):
     rclpy.init(args=args)
-    action_client = NavigateThroughPosesClient()
+    action_client = FollowWaypointsClient()
     future = action_client.send_goal()
     print("goal sent")
     rclpy.spin_until_future_complete(action_client,future)
