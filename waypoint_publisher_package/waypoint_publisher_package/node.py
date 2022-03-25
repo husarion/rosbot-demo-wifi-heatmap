@@ -1,5 +1,4 @@
 #ROS
-from traceback import print_tb
 import rclpy
 from rclpy.node import Node
 from rclpy.action import ActionClient
@@ -79,7 +78,6 @@ class FollowWaypointsClient(Node):
         self.map[len(self.map - 1) - int(abs(self.origin.y / self.resolution))][int(abs(self.origin.x / self.resolution))] = [0,0,255] #DEBUG show robot origin
         p = Process(target=show_map,args=(self.map,)) #Show valid waypoints in different process (app doesn't block)
         p.start()
-        p.
 #########DEBUG################  
 # Set proper waypoint coordinates based on map params
         for waypoint in valid_waypoint_array:
