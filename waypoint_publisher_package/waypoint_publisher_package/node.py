@@ -1,4 +1,5 @@
 #ROS
+from traceback import print_tb
 import rclpy
 from rclpy.node import Node
 from rclpy.action import ActionClient
@@ -12,8 +13,8 @@ import yaml
 from collections import namedtuple
 from multiprocessing import Process
 
-
-def show_map(map): # Function displaying map of waypoints
+# Function displaying map of waypoints
+def show_map(map):
     plt.imshow(map)
     plt.show()
 
@@ -43,6 +44,7 @@ class FollowWaypointsClient(Node):
         self.set_waypoints()
         msg = FollowWaypoints.Goal()
         goals = []
+        #FIX move unnecessary assignments out of the loop
         for waypoint_ in self.robot_frame_waypoint_array:
             waypoint = PoseStamped()
             waypoint.header.frame_id = 'map'
@@ -77,6 +79,7 @@ class FollowWaypointsClient(Node):
         self.map[len(self.map - 1) - int(abs(self.origin.y / self.resolution))][int(abs(self.origin.x / self.resolution))] = [0,0,255] #DEBUG show robot origin
         p = Process(target=show_map,args=(self.map,)) #Show valid waypoints in different process (app doesn't block)
         p.start()
+        p.
 #########DEBUG################  
 # Set proper waypoint coordinates based on map params
         for waypoint in valid_waypoint_array:
@@ -107,6 +110,8 @@ def main(args = None):
     future = action_client.send_goal()
     print("goal sent")
     rclpy.spin_until_future_complete(action_client,future)
+    #FIX kill p process somehow
+    print('goal achived')
 
 if __name__ == '__main__':
     main()
