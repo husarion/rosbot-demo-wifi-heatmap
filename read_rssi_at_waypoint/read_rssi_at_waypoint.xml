@@ -1,0 +1,7 @@
+<class_libraries>
+  <library path="read_rssi_at_waypoint">
+    <class type="nav2_waypoint_follower::ReadRssiAtWaypoint" base_class_type="nav2_core::WaypointTaskExecutor">
+      <description>plugin for reading rssi at waypoints</description>
+    </class>
+  </library>
+</class_libraries>

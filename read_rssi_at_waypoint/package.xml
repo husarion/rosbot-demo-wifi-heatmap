@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
+<package format="3">
+  <name>nav2__read_rssi_at_waypoint</name>
+  <version>1.0.0</version>
+  <description>Plugin for reading RSSI</description>
+  <maintainer email="sdudiak@malpa">Shrijit Singh</maintainer>
+  <license>TODO</license>
+
+  <buildtool_depend>ament_cmake</buildtool_depend>
+
+  <depend>nav2_common</depend>
+  <depend>nav2_core</depend>
+  <depend>nav2_util</depend>
+  <depend>rclcpp</depend>
+  <depend>geometry_msgs</depend>
+  <depend>nav2_msgs</depend>
+  <depend>pluginlib</depend>
+
+  <exec_depend>nav2_bringup</exec_depend>
+
+  <test_depend>ament_cmake_gtest</test_depend>
+
+  <export>
+    <build_type>ament_cmake</build_type>
+  </export>
+
+</package>
