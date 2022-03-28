@@ -109,8 +109,6 @@ def main(args = None):
     print("goal sent")
     rclpy.spin_until_future_complete(action_client,future)
     #FIX kill p process somehow
-    print('goal achived')
-
 if __name__ == '__main__':
     main()
 

@@ -12,7 +12,6 @@ void ReadRssiAtWaypoint::initialize(
     const rclcpp_lifecycle::LifecycleNode::WeakPtr & parent,
     const std::string & plugin_name)
 {
-    // create publisher in parent??
     auto node = parent.lock();
     if (!node) {
         throw std::runtime_error{"Failed to lock node in wait at waypoint plugin!"};

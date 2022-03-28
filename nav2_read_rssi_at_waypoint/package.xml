@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
-<package format="3">
+<package format="2">
   <name>nav2_read_rssi_at_waypoint</name>
   <version>1.0.0</version>
   <description>READ</description>
@@ -23,6 +23,7 @@
   <depend>nav2_costmap_2d</depend>
   <depend>nav2_core</depend>
   <depend>pluginlib</depend>
+  <depend>rosbot_interfaces</depend>
 
   <test_depend>ament_lint_auto</test_depend>
   <test_depend>ament_lint_common</test_depend>

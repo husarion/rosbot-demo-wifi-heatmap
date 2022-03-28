@@ -31,6 +31,7 @@ protected:
     bool is_enabled_;
     int n_measurements_;
     rclcpp::Logger logger_{rclcpp::get_logger("nav2_waypoint_follower")};
-};
-} //end namespace
+    //publisher
+}; //end namespace
+}
 #endif

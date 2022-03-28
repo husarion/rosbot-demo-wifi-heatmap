@@ -19,6 +19,8 @@ find_package(tf2_ros REQUIRED)
 find_package(nav2_costmap_2d REQUIRED)
 find_package(nav2_core REQUIRED)
 find_package(pluginlib REQUIRED)
+find_package(rosbot_interfaces REQUIRED)
+
 
 include_directories(
   include
@@ -41,6 +43,7 @@ set(dependencies
   nav2_costmap_2d
   nav2_core
   pluginlib
+  rosbot_interfaces
 )
 
 add_library(${library_name} SHARED
@@ -72,4 +75,4 @@ install(FILES nav2_read_rssi_at_waypoint.xml
 ament_export_include_directories(include)
 ament_export_libraries(${library_name})
 ament_export_dependencies(${dependencies})
-# ament_package()
+ament_package()
