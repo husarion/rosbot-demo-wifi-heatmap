@@ -7,14 +7,14 @@
 #include "rclcpp_lifecycle/lifecycle_node.hpp"
 #include "nav2_core/waypoint_task_executor.hpp"
 
-namespace nav2_waypoint_follower
+namespace nav2_read_rssi_at_waypoint
 { //start namespace
 
 class ReadRssiAtWaypoint : public nav2_core::WaypointTaskExecutor
 {
 public:
 
-    ReadRssiAtWaypoint(): is_enabled_(true), n_measurements_(10){};
+    ReadRssiAtWaypoint();
 
     ~ReadRssiAtWaypoint();
 
@@ -24,8 +24,8 @@ public:
     );
 
     bool processAtWaypoint(
-        const geometry_msgs::msg::PoseStamped & curr_pose,
-        const int & curr_pose_index
+        const geometry_msgs::msg::PoseStamped & curr_pose __attribute__((unused)),
+        const int & curr_pose_index __attribute__((unused))
     );
 protected:
     bool is_enabled_;

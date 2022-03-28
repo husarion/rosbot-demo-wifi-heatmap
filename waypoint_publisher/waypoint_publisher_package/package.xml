@@ -4,7 +4,7 @@
   <name>waypoint_publisher_package</name>
   <version>0.0.0</version>
   <description>TODO: Package description</description>
-  <maintainer email="sdudiak01@gmail.com">s</maintainer>
+  <maintainer email="stanislaw.dudiak@husarion.com">s</maintainer>
   <license>TODO: License declaration</license>
 
   <depend>nav2_msgs</depend>

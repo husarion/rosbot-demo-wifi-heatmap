@@ -1,12 +1,12 @@
 #include "nav2_read_rssi_at_waypoint/read_rssi_at_waypoint.hpp"
 #include "nav2_util/node_utils.hpp"
 
-namespace nav2_waypoint_follower
+namespace nav2_read_rssi_at_waypoint
 { //start namespace
 
-// ReadRssiAtWaypoint::ReadRssiAtWaypoint() : is_enabled_(true), n_measurements_(10){}
+ReadRssiAtWaypoint::ReadRssiAtWaypoint() : is_enabled_(true), n_measurements_(10){}
 
-// ReadRssiAtWaypoint::~ReadRssiAtWaypoint(){}
+ReadRssiAtWaypoint::~ReadRssiAtWaypoint(){}
 
 void ReadRssiAtWaypoint::initialize(
     const rclcpp_lifecycle::LifecycleNode::WeakPtr & parent,
@@ -34,11 +34,11 @@ void ReadRssiAtWaypoint::initialize(
     if(n_measurements_ == 0){
         is_enabled_ = false;
     }
-};
+}
 
 bool ReadRssiAtWaypoint::processAtWaypoint(
-    const geometry_msgs::msg::PoseStamped & curr_pose,
-    const int & curr_pose_index
+    const geometry_msgs::msg::PoseStamped & curr_pose __attribute__((unused)),
+    const int & curr_pose_index __attribute__((unused))
     )
 {
     if(!is_enabled_){
@@ -51,6 +51,5 @@ bool ReadRssiAtWaypoint::processAtWaypoint(
 } //end namespace
 #include "pluginlib/class_list_macros.hpp"
 PLUGINLIB_EXPORT_CLASS(
-    nav2_waypoint_follower::ReadRssiAtWaypoint,
-    nav2_core::WaypointTaskExecutor
-)
+  nav2_read_rssi_at_waypoint::ReadRssiAtWaypoint,
+  nav2_core::WaypointTaskExecutor)

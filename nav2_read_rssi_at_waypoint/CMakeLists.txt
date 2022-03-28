@@ -1,7 +1,9 @@
-cmake_minimum_required(VERSION 3.8)
+cmake_minimum_required(VERSION 3.5)
 project(nav2_read_rssi_at_waypoint)
 
-set(CMAKE_CXX_STANDARD 14)
+if(NOT CMAKE_CXX_STANDARD)
+  set(CMAKE_CXX_STANDARD 14)
+endif()
 
 # find dependencies
 find_package(ament_cmake REQUIRED)
@@ -20,13 +22,16 @@ find_package(nav2_costmap_2d REQUIRED)
 find_package(nav2_core REQUIRED)
 find_package(pluginlib REQUIRED)
 find_package(rosbot_interfaces REQUIRED)
+find_package(nav2_common REQUIRED)
 
+
+nav2_package()
 
 include_directories(
   include
 )
 
-set(library_name ${PROJECT_NAME}_plugin)
+set(library_name ${PROJECT_NAME})
 
 set(dependencies
   rclcpp
