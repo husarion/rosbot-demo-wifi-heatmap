@@ -1,5 +1,7 @@
 #include "nav2_read_rssi_at_waypoint/read_rssi_at_waypoint.hpp"
 #include "nav2_util/node_utils.hpp"
+// include custom message
+#include "rosbot_interfaces/msg/rssi_at_waypoint.hpp"
 
 namespace nav2_read_rssi_at_waypoint
 { //start namespace
@@ -13,6 +15,9 @@ void ReadRssiAtWaypoint::initialize(
     const std::string & plugin_name)
 {
     auto node = parent.lock();
+
+    // rssi_data_msg = std::make_shared<rosbot_interfaces::msg::RssiAtWaypoint>(); //change for auto message in processAtWaypoint?
+
     if (!node) {
         throw std::runtime_error{"Failed to lock node in wait at waypoint plugin!"};
     }
@@ -34,6 +39,11 @@ void ReadRssiAtWaypoint::initialize(
     if(n_measurements_ == 0){
         is_enabled_ = false;
     }
+
+    if(is_enabled_){
+        RCLCPP_INFO(logger_,"Rssi Measurement plugin enabled");
+        rssi_data_publisher = node->create_publisher<rosbot_interfaces::msg::RssiAtWaypoint>("rssi_data",(10));
+    }
 }
 
 bool ReadRssiAtWaypoint::processAtWaypoint(
@@ -44,8 +54,12 @@ bool ReadRssiAtWaypoint::processAtWaypoint(
     if(!is_enabled_){
         return true;
     }
-    RCLCPP_INFO(logger_,"Number of measurements is %i",n_measurements_);
-    rclcpp::sleep_for(std::chrono::milliseconds(2000));
+    auto msg = rosbot_interfaces::msg::RssiAtWaypoint();
+    msg.coordinates.x = curr_pose.pose.position.x;
+    msg.coordinates.y = curr_pose.pose.position.y;
+    msg.coordinates.z = curr_pose.pose.position.z;
+    msg.rssi = -15.45;
+    rssi_data_publisher->publish(msg);
     return true;
 }
 } //end namespace

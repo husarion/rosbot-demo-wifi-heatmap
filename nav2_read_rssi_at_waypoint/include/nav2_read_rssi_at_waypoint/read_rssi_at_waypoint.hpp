@@ -6,7 +6,8 @@
 #include "rclcpp/rclcpp.hpp"
 #include "rclcpp_lifecycle/lifecycle_node.hpp"
 #include "nav2_core/waypoint_task_executor.hpp"
-
+// include custom message
+#include "rosbot_interfaces/msg/rssi_at_waypoint.hpp"
 namespace nav2_read_rssi_at_waypoint
 { //start namespace
 
@@ -31,7 +32,8 @@ protected:
     bool is_enabled_;
     int n_measurements_;
     rclcpp::Logger logger_{rclcpp::get_logger("nav2_waypoint_follower")};
-    //publisher
+    // rosbot_interfaces::msg::RssiAtWaypoint::SharedPtr rssi_data_msg; //message declaration
+    rclcpp::Publisher<rosbot_interfaces::msg::RssiAtWaypoint>::SharedPtr rssi_data_publisher; //publisher declaration
 }; //end namespace
 }
 #endif
