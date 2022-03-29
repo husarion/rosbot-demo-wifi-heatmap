@@ -1,7 +1,11 @@
+#include <chrono>
+#include <thread>
+
 #include "nav2_read_rssi_at_waypoint/read_rssi_at_waypoint.hpp"
 #include "nav2_util/node_utils.hpp"
 // include custom message
 #include "rosbot_interfaces/msg/rssi_at_waypoint.hpp"
+#include "read_rssi.cpp"
 
 namespace nav2_read_rssi_at_waypoint
 { //start namespace
@@ -58,7 +62,13 @@ bool ReadRssiAtWaypoint::processAtWaypoint(
     msg.coordinates.x = curr_pose.pose.position.x;
     msg.coordinates.y = curr_pose.pose.position.y;
     msg.coordinates.z = curr_pose.pose.position.z;
-    msg.rssi = -15.45;
+    int rssi_ = 0;
+    for (int i = 0; i < n_measurements_; i++){ //read rssi n_measurements_ times
+        rssi_ += read_rssi();
+        std::this_thread::sleep_for(std::chrono::milliseconds(500)); //wait 0.5 sec between measurements
+    }
+    rssi_ /= n_measurements_;
+    msg.rssi = rssi_;
     rssi_data_publisher->publish(msg);
     return true;
 }
