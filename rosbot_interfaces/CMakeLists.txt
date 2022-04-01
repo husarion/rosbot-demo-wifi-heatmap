@@ -13,6 +13,7 @@ find_package(geometry_msgs REQUIRED)
 
 rosidl_generate_interfaces(${PROJECT_NAME}
 "msg/RssiAtWaypoint.msg"
+DEPENDENCIES geometry_msgs #without this messages crash while creating publihser in plugin
  )
 
 if(BUILD_TESTING)
