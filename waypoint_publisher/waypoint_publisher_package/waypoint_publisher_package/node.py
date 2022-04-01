@@ -75,7 +75,6 @@ class FollowWaypointsClient(Node):
         for waypoint in valid_waypoint_array:   
             self.map[waypoint.x,waypoint.y] = [0,255,0] #Mark valid waypoints
         self.map[len(self.map) - 1][0] = [0,0,255] #DEBUG show map origin
-        self.map[len(self.map - 1) - int(abs(self.origin.y / self.resolution))][int(abs(self.origin.x / self.resolution))] = [0,0,255] #DEBUG show robot origin
         p = Process(target=show_map,args=(self.map,)) #Show valid waypoints in different process (app doesn't block)
         p.start()
 #########DEBUG################  
