@@ -61,7 +61,7 @@ ament_target_dependencies(${library_name}
 
 target_compile_definitions(${library_name} PUBLIC "PLUGINLIB__DISABLE_BOOST_FUNCTIONS")
 
-pluginlib_export_plugin_description_file(nav2_core nav2_read_rssi_at_waypoint.xml)
+pluginlib_export_plugin_description_file(nav2_waypoint_follower nav2_read_rssi_at_waypoint.xml)
 
 install(TARGETS ${library_name}
   ARCHIVE DESTINATION lib

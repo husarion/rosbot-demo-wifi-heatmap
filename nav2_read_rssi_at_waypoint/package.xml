@@ -33,6 +33,6 @@
 
   <export>
     <build_type>ament_cmake</build_type>
-    <nav2_core plugin="${prefix}/nav2_read_rssi_at_waypoint.xml" />
+    <nav2_waypoint_follower plugin="${prefix}/nav2_read_rssi_at_waypoint.xml" />
   </export>
 </package>
