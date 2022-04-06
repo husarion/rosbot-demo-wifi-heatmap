@@ -10,15 +10,7 @@ find_package(ament_cmake REQUIRED)
 find_package(rclcpp REQUIRED)
 find_package(rclcpp_action REQUIRED)
 find_package(rclcpp_lifecycle REQUIRED)
-find_package(std_msgs REQUIRED)
-find_package(visualization_msgs REQUIRED)
 find_package(nav2_util REQUIRED)
-find_package(nav2_msgs REQUIRED)
-find_package(nav_msgs REQUIRED)
-find_package(geometry_msgs REQUIRED)
-find_package(builtin_interfaces REQUIRED)
-find_package(tf2_ros REQUIRED)
-find_package(nav2_costmap_2d REQUIRED)
 find_package(nav2_core REQUIRED)
 find_package(pluginlib REQUIRED)
 find_package(rosbot_interfaces REQUIRED)
@@ -37,15 +29,7 @@ set(dependencies
   rclcpp
   rclcpp_action
   rclcpp_lifecycle
-  std_msgs
-  visualization_msgs
   nav2_util
-  nav2_msgs
-  nav_msgs
-  geometry_msgs
-  builtin_interfaces
-  tf2_ros
-  nav2_costmap_2d
   nav2_core
   pluginlib
   rosbot_interfaces
