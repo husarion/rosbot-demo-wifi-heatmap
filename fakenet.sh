@@ -1,3 +1,5 @@
+#!/bin/bash
+
 mkdir -p ~/fakenet_
 touch ~/fakenet_/wireless
 while [ true ]; do
