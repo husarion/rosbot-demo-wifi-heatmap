@@ -5,6 +5,7 @@ from rosbot_interfaces.msg import RssiAtWaypoint
 #Utils
 from collections import namedtuple
 import yaml
+import cv2
 
 RssiWaypoint = namedtuple('RssiWaypoint','x y rssi')
 
@@ -22,13 +23,16 @@ class HeatmapGenerator(Node):
             map_data = yaml.safe_load(file)
         self.map_origin = Waypoint(map_data['origin'][0],map_data['origin'][1])
         self.map_resolution = map_data['resolution']
+        self.map = cv2.imread(map_data['image'])
 
 #Class attributes:
-        self.raw_rssi_data = [] # array to store data from topic
+        self.rssi_data = [] # array to store data from topic
 
     def rssi_data_callback(self,msg:RssiAtWaypoint):
-        self.raw_rssi_data.append(msg) # store data sent from topic
-    
+        x = int((msg.coordinates.x - self.map_origin.x) / self.map_resolution) #Change coordinates from real to map's
+        y = (len(self.map[0]) - 1)  -  int((msg.coordinates.y - self.map_origin.y) / self.map_resolution) #Origin is set at left-bottom corner, so subtraction from map size is needed
+        self.rssi_data.append(RssiWaypoint(x,y,msg.rssi)) # store data sent from topic 
+
 def main(args = None):
     pass
 
