@@ -6,6 +6,7 @@ from rosbot_interfaces.msg import RssiAtWaypoint
 from collections import namedtuple
 import yaml
 import cv2
+from submodules.generate_heatmap import generate_heatmap
 
 RssiWaypoint = namedtuple('RssiWaypoint','x y rssi')
 
