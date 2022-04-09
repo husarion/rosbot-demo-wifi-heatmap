@@ -13,15 +13,7 @@
   <depend>rclcpp</depend>
   <depend>rclcpp_action</depend>
   <depend>rclcpp_lifecycle</depend>  
-  <depend>std_msgs</depend>
-  <depend>visualization_msgs</depend>
   <depend>nav2_util</depend>
-  <depend>nav2_msgs</depend>
-  <depend>nav_msgs</depend>
-  <depend>geometry_msgs</depend>
-  <depend>builtin_interfaces</depend>
-  <depend>tf2_ros</depend>
-  <depend>nav2_costmap_2d</depend>
   <depend>nav2_core</depend>
   <depend>pluginlib</depend>
   <depend>rosbot_interfaces</depend>
@@ -33,6 +25,6 @@
 
   <export>
     <build_type>ament_cmake</build_type>
-    <nav2_core plugin="${prefix}/nav2_read_rssi_at_waypoint.xml" />
+    <nav2_waypoint_follower plugin="${prefix}/nav2_read_rssi_at_waypoint.xml" />
   </export>
 </package>

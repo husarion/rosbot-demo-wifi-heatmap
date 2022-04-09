@@ -45,8 +45,8 @@ void ReadRssiAtWaypoint::initialize(
 
     if(is_enabled_){
         RCLCPP_INFO(logger_,"Rssi Measurement plugin enabled");
-// Tutaj się wykłada
         rssi_data_publisher = node->create_publisher<rosbot_interfaces::msg::RssiAtWaypoint>("rssi_data",(10));
+        rssi_data_publisher->on_activate();
     }
 }
 
@@ -58,19 +58,21 @@ bool ReadRssiAtWaypoint::processAtWaypoint(
     if(!is_enabled_){
         return true;
     }
-    // auto msg = rosbot_interfaces::msg::RssiAtWaypoint();
-    // msg.coordinates.x = curr_pose.pose.position.x;
-    // msg.coordinates.y = curr_pose.pose.position.y;
-    // msg.coordinates.z = curr_pose.pose.position.z;
-    // int rssi_ = 0;
-    // for (int i = 0; i < n_measurements_; i++){ //read rssi n_measurements_ times
-    //     rssi_ += read_rssi();
-    //     std::this_thread::sleep_for(std::chrono::milliseconds(500)); //wait 0.5 sec between measurements
-    // }
-    // rssi_ /= n_measurements_;
-    // msg.rssi = rssi_;
-    RCLCPP_INFO(logger_,"RSSI = ???, publishing..."); //Remove?
-    // rssi_data_publisher->publish(msg);
+    RCLCPP_INFO(logger_,"Measuring...");
+    auto msg = rosbot_interfaces::msg::RssiAtWaypoint();
+    msg.coordinates.x = curr_pose.pose.position.x;
+    msg.coordinates.y = curr_pose.pose.position.y;
+    msg.coordinates.z = curr_pose.pose.position.z;
+    int rssi_ = 0;
+    for (int i = 0; i < n_measurements_; i++){ //read rssi n_measurements_ times
+        rssi_ += read_rssi();
+        // std::cout<<rssi_<<std::endl;
+        std::this_thread::sleep_for(std::chrono::milliseconds(500)); //wait 0.5 sec between measurements
+    }
+    rssi_ = rssi_ /  n_measurements_;
+    msg.rssi = rssi_;
+    std::cout << "RSSI = " << rssi_ <<std::endl;
+    rssi_data_publisher->publish(msg);
     return true;
 }
 } //end namespace

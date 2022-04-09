@@ -33,7 +33,7 @@ protected:
     int n_measurements_;
     rclcpp::Logger logger_{rclcpp::get_logger("nav2_waypoint_follower")};
     rosbot_interfaces::msg::RssiAtWaypoint::SharedPtr rssi_data_msg; //message declaration
-    rclcpp::Publisher<rosbot_interfaces::msg::RssiAtWaypoint>::SharedPtr rssi_data_publisher; //publisher declaration
+    std::shared_ptr<rclcpp_lifecycle::LifecyclePublisher<rosbot_interfaces::msg::RssiAtWaypoint>> rssi_data_publisher;
 }; //end namespace
 }
 #endif
