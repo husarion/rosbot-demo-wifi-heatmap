@@ -2,6 +2,7 @@
 import rclpy
 from rclpy.node import Node
 from rosbot_interfaces.msg import RssiAtWaypoint
+from std_msgs.msg import Bool
 #Utils
 from collections import namedtuple
 import yaml
@@ -16,7 +17,7 @@ class HeatmapGenerator(Node):
     def __init__(self):
         super().__init__('heatmap_generator')
         self.subscription = self.create_subscription(RssiAtWaypoint,'/rssi_data',self.rssi_data_callback,10)
-        self.line_counter = 0 #Param for saving messages in separate lines
+        self.subscription = self.create_subscription(Bool,'/heatmap_generator_trigger',self.trigger_callback,10)
 #User params:
         # self.declare_parameter('path_to_yaml','/map/map.yaml')
 #Map params:
@@ -36,6 +37,8 @@ class HeatmapGenerator(Node):
         with open("/rssi_data/data.txt") as datafile:
             for elem in self.rssi_data:
                 datafile.write(" ".join(elem) + "\n")
+    def trigger_callback(self,msg:Bool):
+        print("Generating heatmap ...")
 
 def main(args = None):
     rclpy.init(args=args)
