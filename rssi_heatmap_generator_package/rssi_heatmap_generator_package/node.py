@@ -16,6 +16,7 @@ class HeatmapGenerator(Node):
     def __init__(self):
         super().__init__('heatmap_generator')
         self.subscription = self.create_subscription(RssiAtWaypoint,'/rssi_data',self.rssi_data_callback,10)
+        self.line_counter = 0 #Param for saving messages in separate lines
 #User params:
         # self.declare_parameter('path_to_yaml','/map/map.yaml')
 #Map params:
@@ -30,7 +31,11 @@ class HeatmapGenerator(Node):
     def rssi_data_callback(self,msg:RssiAtWaypoint):
         # x = int((msg.coordinates.x - self.map_origin.x) / self.map_resolution) #Change coordinates from real to map's
         # y = (len(self.map[0]) - 1)  -  int((msg.coordinates.y - self.map_origin.y) / self.map_resolution) #Origin is set at left-bottom corner, so subtraction from map size is needed
-        self.rssi_data.append(msg) # store data sent from topic 
+        data = RssiAtWaypoint(msg.coordinates.x,msg.coordinates.y,msg.rssi)
+        self.rssi_data.append(RssiAtWaypoint(data)) # store data sent from topic
+        with open("/rssi_data/data.txt") as datafile:
+            for elem in self.rssi_data:
+                datafile.write(" ".join(elem) + "\n")
 
 def main(args = None):
     rclpy.init(args=args)
