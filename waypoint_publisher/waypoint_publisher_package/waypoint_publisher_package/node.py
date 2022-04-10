@@ -25,7 +25,7 @@ class FollowWaypointsClient(Node):
     def __init__(self):
         super().__init__('navigate_through_poses_client')
         self._action_client = ActionClient(self,FollowWaypoints,'/follow_waypoints')
-        self.publisher = self.create_publisher(Bool,'heatmap_generator_trigger',1)
+        self.publisher = self.create_publisher(Bool,'/heatmap_generator_trigger',1)
         self.p = Process(target=show_map,args=(self.map,)) #Show valid waypoints in different process (app doesn't block)
 #User params:
         self.declare_parameter('density',5)
