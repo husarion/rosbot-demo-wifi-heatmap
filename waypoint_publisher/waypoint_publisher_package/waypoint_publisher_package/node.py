@@ -64,16 +64,26 @@ class FollowWaypointsClient(Node):
         # Get action result
         self._action_client.wait_for_server()
         self._send_goal_future = self._action_client.send_goal_async(msg)
-        self._send_goal_future.add_done_callback(self.goal_callback)
-        # return self._action_client.send_goal_async(msg)
+        self._send_goal_future.add_done_callback(self.response_callback)
     
-    def goal_callback(self,future):
-# Publish trigger message
+    def response_callback(self,future):
+        goal_handle = future.result()
+        # msg = Bool
+        # msg.data = True
+        # self.publisher.publish(msg)
+        # self.p.kill() # Kill process displaying waypoints
+        self.get_logger().info("goal recieved")
+        self._get_result_future = goal_handle.get_result_async()
+        self._get_result_future.add_done_callback(self.get_result_callback)
+    
+    def result_callback(self,future):
+        goal_handle = future.result()
         msg = Bool
         msg.data = True
         self.publisher.publish(msg)
         self.p.kill() # Kill process displaying waypoints
-        self.get_logger().info("recieved goal result")
+        self.get_logger().info("goal achieved")
+        rclpy.shutdown() #Kill node
 
     def set_waypoints(self):
         waypoint_array = []
@@ -118,8 +128,7 @@ def main(args = None):
     rclpy.init(args=args)
     action_client = FollowWaypointsClient()
     future = action_client.send_goal()
-    print("goal sent")
-    rclpy.spin_until_future_complete(action_client,future)
+    rclpy.spin(action_client)
 if __name__ == '__main__':
     main()
 
