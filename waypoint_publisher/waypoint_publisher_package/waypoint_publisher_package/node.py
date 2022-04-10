@@ -127,7 +127,7 @@ class FollowWaypointsClient(Node):
 def main(args = None):
     rclpy.init(args=args)
     action_client = FollowWaypointsClient()
-    future = action_client.send_goal()
+    action_client.send_goal()
     rclpy.spin(action_client)
 if __name__ == '__main__':
     main()
