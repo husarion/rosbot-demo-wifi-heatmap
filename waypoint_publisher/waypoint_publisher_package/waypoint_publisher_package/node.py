@@ -11,6 +11,7 @@ import cv2
 import yaml
 from collections import namedtuple
 from multiprocessing import Process
+from std_msgs.msg import Bool
 
 # Function displaying map of waypoints
 def show_map(map):
@@ -24,6 +25,8 @@ class FollowWaypointsClient(Node):
     def __init__(self):
         super().__init__('navigate_through_poses_client')
         self._action_client = ActionClient(self,FollowWaypoints,'/follow_waypoints')
+        self.publisher = self.create_publisher(Bool,'heatmap_generator_trigger',1)
+        self.p = Process(target=show_map,args=(self.map,)) #Show valid waypoints in different process (app doesn't block)
 #User params:
         self.declare_parameter('density',5)
         self.declare_parameter('collision_range',3)
@@ -58,9 +61,20 @@ class FollowWaypointsClient(Node):
             goals.append(waypoint)
         msg.poses = goals
         print('waiting for server')
+        # Get action result
         self._action_client.wait_for_server()
-        return self._action_client.send_goal_async(msg)
+        self._send_goal_future = self._action_client.send_goal_async(msg)
+        self._send_goal_future.add_done_callback(self.goal_callback)
+        # return self._action_client.send_goal_async(msg)
     
+    def goal_callback(self,future):
+# Publish trigger message
+        msg = Bool
+        msg.data = True
+        self.publisher.publish(msg)
+        self.p.kill() # Kill process displaying waypoints
+        self.get_logger().info("recieved goal result")
+
     def set_waypoints(self):
         waypoint_array = []
 # Add available waypoints based on selected density
@@ -75,8 +89,7 @@ class FollowWaypointsClient(Node):
         for waypoint in valid_waypoint_array:   
             self.map[waypoint.x,waypoint.y] = [0,255,0] #Mark valid waypoints
         self.map[len(self.map) - 1][0] = [0,0,255] #DEBUG show map origin
-        p = Process(target=show_map,args=(self.map,)) #Show valid waypoints in different process (app doesn't block)
-        p.start()
+        self.p.start() #Start process displaying waypoints
 #########DEBUG################  
 # Set proper waypoint coordinates based on map params
         for waypoint in valid_waypoint_array:
@@ -107,7 +120,6 @@ def main(args = None):
     future = action_client.send_goal()
     print("goal sent")
     rclpy.spin_until_future_complete(action_client,future)
-    #FIX kill p process somehow
 if __name__ == '__main__':
     main()
 
