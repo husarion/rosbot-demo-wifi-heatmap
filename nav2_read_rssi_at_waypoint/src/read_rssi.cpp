@@ -10,6 +10,7 @@ int read_rssi(){
             std::getline(rssi_file,str);
         }
         std::getline(rssi_file,str);
+        std::cout << str <<std::endl; //Debug!!!
         str = str.substr(29,3);
         rssi_file.close();
         return stoi(str);
