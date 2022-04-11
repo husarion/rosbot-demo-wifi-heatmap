@@ -32,8 +32,8 @@ class FollowWaypointsClient(Node):
 #Show valid waypoints in different process (app doesn't block)
         self.p = Process(target=show_map,args=(self.map,))
 #User params:
-        self.declare_parameter('density',5)
-        self.declare_parameter('collision_range',3)
+        self.declare_parameter('density',8)
+        self.declare_parameter('collision_range',4)
         self.declare_parameter('path_to_yaml','/map/map.yaml')
         self.density = self.get_parameter('density').get_parameter_value().integer_value
         self.collision_range = self.get_parameter('collision_range').get_parameter_value().integer_value
@@ -83,6 +83,7 @@ class FollowWaypointsClient(Node):
 #Publlish trigger message
         msg = Bool
         msg.data = True
+        self.get_logger().info("Publishing trigger...")
         self.publisher.publish(msg)
 #Kill process displaying waypoints
         self.p.kill()
