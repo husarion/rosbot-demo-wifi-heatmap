@@ -54,7 +54,7 @@ def generate_heatmap(data,x_image_size,y_image_size,resolution_coeff):
     axs[1][0].imshow(resized_interp_data,cmap = cmapGR) #Set colouring limits using vmax,vmin
     axs[1][0].set_title('resized')
     axs[1][0].axis("off")
-    axs[1][1].imshow(cv2.GaussianBlur(resized_interp_data,(31,31),0),cmap = cmapGR) #Set colouring limits using vmax,vmin
+    axs[1][1].imshow(cv2.blur(resized_interp_data,(31,31)),cmap = cmapGR) #Set colouring limits using vmax,vmin
     axs[1][1].set_title('smoothed out')
     axs[1][1].axis("off")
     plt.show()
