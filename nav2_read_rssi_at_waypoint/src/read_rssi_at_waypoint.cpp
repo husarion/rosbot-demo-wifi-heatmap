@@ -65,8 +65,12 @@ bool ReadRssiAtWaypoint::processAtWaypoint(
     msg.coordinates.z = curr_pose.pose.position.z;
     int rssi_ = 0;
     for (int i = 0; i < n_measurements_; i++){ //read rssi n_measurements_ times
-        rssi_ += read_rssi();
-        // std::cout<<rssi_<<std::endl;
+       int rssi = read_rssi();
+        if (rssi == 100){
+            n_measurements_ -= 1; //decrease number of measurements due to invalid string
+        }else{
+        rssi_ += rssi;
+        }
         std::this_thread::sleep_for(std::chrono::milliseconds(500)); //wait 0.5 sec between measurements
     }
     rssi_ = rssi_ /  n_measurements_;
