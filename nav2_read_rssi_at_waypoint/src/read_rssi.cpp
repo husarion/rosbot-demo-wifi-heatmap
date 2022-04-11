@@ -11,7 +11,7 @@ int read_rssi(){
         }
         if(str.length() < 29){
             std::cout << "String not loaded, skipping measurement" << std::endl;
-            return 100;
+            return 1;
         }
         std::getline(rssi_file,str);
         str = str.substr(29,3);
