@@ -41,6 +41,12 @@ def generate_heatmap(data,x_image_size,y_image_size,resolution_coeff):
     xpoints = np.arange(0,x_image_size,1) #Set data arrays for interpolation according to image size 
     ypoints = np.arange(0,y_image_size,1)
     interp_data = f(xpoints,ypoints) #Interpolate over data arrays using f function
+#Ensure that none of interpolated values are out of bounds (-100,0)
+    for i,_ in enumerate(interp_data):
+        for j,_ in enumerate(interp_data[i]):
+            if interp_data[i][j] > 0: interp_data[i][j] = 0
+            if interp_data[i][j] < -100: interp_data[i][j] = -100
+
     interp_data = np.transpose(interp_data)
     resized_interp_data = cv2.resize(interp_data,(resolution_coeff*y_image_size,resolution_coeff*x_image_size),interpolation=cv2.INTER_AREA)
 #DEBUG Show results
