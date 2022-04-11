@@ -37,7 +37,7 @@ class HeatmapGenerator(Node):
         self.rssi_data.append(data) # store data sent from topic
         with open("/rssi_data/data.txt",'w') as datafile:
             for elem in self.rssi_data:
-                datafile.write("x:" + str(elem.x) + "y:" + str(elem.y) + "rssi:" + str(elem.rssi) + "\n")
+                datafile.write("x: " + str(elem.x) + " y: " + str(elem.y) + " rssi: " + str(elem.rssi) + "\n")
         datafile.close()
 
 def main(args = None):
