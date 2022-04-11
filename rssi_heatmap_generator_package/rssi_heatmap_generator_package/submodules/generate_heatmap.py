@@ -7,28 +7,7 @@ import scipy.interpolate
 
 RssiWaypoint = namedtuple('RssiWaypoint','x y rssi')
 
-sample_data = [
-    RssiWaypoint(0,0,-10),
-    RssiWaypoint(0,4,-20),
-    RssiWaypoint(0,8,-30),
-    RssiWaypoint(0,12,-40),
-    RssiWaypoint(0,16,-60),
-    RssiWaypoint(9,4,-60),
-    RssiWaypoint(9,8,-40),
-    RssiWaypoint(9,12,-30),
-    RssiWaypoint(9,16,-20),
-    RssiWaypoint(5,0,-10),
-    RssiWaypoint(5,4,-40),
-    RssiWaypoint(5,8,-40),
-    RssiWaypoint(5,12,-40),
-    RssiWaypoint(5,16,-40),
-    RssiWaypoint(5,19,-40),
-    RssiWaypoint(3,4,-40),
-    RssiWaypoint(3,8,-40),
-    RssiWaypoint(3,12,-40),
-    RssiWaypoint(3,16,-40),
-    RssiWaypoint(3,19,-40),
-]
+sample_data = [(RssiWaypoint(x,y,-(x*y*2)))for x in range(0,10,2) for y in range(0,20,4)]
 
 def generate_heatmap(data,x_image_size,y_image_size,resolution_coeff):
     blank_image = np.zeros((x_image_size,y_image_size,1)) #Set empty image
@@ -66,16 +45,16 @@ def generate_heatmap(data,x_image_size,y_image_size,resolution_coeff):
     resized_interp_data = cv2.resize(interp_data,(resolution_coeff*y_image_size,resolution_coeff*x_image_size),interpolation=cv2.INTER_AREA)
 #DEBUG Show results
     fig,axs = plt.subplots(2,2)
-    axs[0][0].imshow(blank_image,vmin = -60,vmax = 0,cmap = cmapGR) #Set colouring limits using vmax,vmin
+    axs[0][0].imshow(blank_image,cmap = cmapGR) #Set colouring limits using vmax,vmin
     axs[0][0].set_title('original')
     axs[0][0].axis("off")
-    axs[0][1].imshow(interp_data,vmin = -60,vmax = 0,cmap = cmapGR) #Set colouring limits using vmax,vmin
+    axs[0][1].imshow(interp_data,cmap = cmapGR) #Set colouring limits using vmax,vmin
     axs[0][1].set_title('interpolation result')
     axs[0][1].axis("off")   
-    axs[1][0].imshow(resized_interp_data,vmin = -60,vmax = 0,cmap = cmapGR) #Set colouring limits using vmax,vmin
+    axs[1][0].imshow(resized_interp_data,cmap = cmapGR) #Set colouring limits using vmax,vmin
     axs[1][0].set_title('resized')
     axs[1][0].axis("off")
-    axs[1][1].imshow(cv2.GaussianBlur(resized_interp_data,(31,31),0),vmin = -60,vmax = 0,cmap = cmapGR) #Set colouring limits using vmax,vmin
+    axs[1][1].imshow(cv2.GaussianBlur(resized_interp_data,(31,31),0),cmap = cmapGR) #Set colouring limits using vmax,vmin
     axs[1][1].set_title('smoothed out')
     axs[1][1].axis("off")
     plt.show()

@@ -2,6 +2,7 @@
 import rclpy
 from rclpy.node import Node
 from rosbot_interfaces.msg import RssiAtWaypoint
+from std_msgs.msg import Float32
 #Utils
 from collections import namedtuple
 import yaml
@@ -31,11 +32,13 @@ class HeatmapGenerator(Node):
     def rssi_data_callback(self,msg:RssiAtWaypoint):
         # x = int((msg.coordinates.x - self.map_origin.x) / self.map_resolution) #Change coordinates from real to map's
         # y = (len(self.map[0]) - 1)  -  int((msg.coordinates.y - self.map_origin.y) / self.map_resolution) #Origin is set at left-bottom corner, so subtraction from map size is needed
-        data = RssiAtWaypoint(msg.coordinates.x,msg.coordinates.y,msg.rssi)
-        self.rssi_data.append(RssiAtWaypoint(data)) # store data sent from topic
-        with open("/rssi_data/data.txt") as datafile:
+        # data = RssiWaypoint(msg.coordinates.x,msg.coordinates.y,msg.rssi)
+        data = RssiWaypoint(msg.coordinates.x,msg.coordinates.y,msg.rssi)
+        self.rssi_data.append(data) # store data sent from topic
+        with open("/rssi_data/data.txt",'w') as datafile:
             for elem in self.rssi_data:
-                datafile.write(" ".join(elem) + "\n")
+                datafile.write("x:" + str(elem.x) + "y:" + str(elem.y) + "rssi:" + str(elem.rssi) + "\n")
+        datafile.close()
 
 def main(args = None):
     rclpy.init(args=args)
