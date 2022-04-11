@@ -4,7 +4,7 @@ from rclpy.node import Node
 from rclpy.action import ActionClient
 from nav2_msgs.action import FollowWaypoints
 from geometry_msgs.msg import PoseStamped
-from std_msgs.msg import Bool
+from std_msgs.msg import Empty
 #Utils
 import tkinter
 import matplotlib.pyplot as plt
@@ -28,9 +28,7 @@ class FollowWaypointsClient(Node):
 #Create action client
         self._action_client = ActionClient(self,FollowWaypoints,'/follow_waypoints')
 #Subscribe to topic sending trigger message
-        self.publisher = self.create_publisher(Bool,'/heatmap_generator_trigger',1)
-#Show valid waypoints in different process (app doesn't block)
-        self.p = Process(target=show_map,args=(self.map,))
+        self.publisher = self.create_publisher(Empty,'/heatmap_generator_trigger',1)
 #User params:
         self.declare_parameter('density',8)
         self.declare_parameter('collision_range',4)
@@ -45,6 +43,8 @@ class FollowWaypointsClient(Node):
         self.map = cv2.imread(data['image'])
         self.waypoint_array = []
         self.robot_frame_waypoint_array = []
+#Show valid waypoints in different process (app doesn't block)
+        self.p = Process(target=show_map,args=(self.map,))
 
 #Send created waypoints to FollowWaypoints action server
     def send_goal(self):
@@ -65,7 +65,7 @@ class FollowWaypointsClient(Node):
             waypoint.pose.orientation.w = 1.
             goals.append(waypoint)
         msg.poses = goals
-        print('waiting for server')
+        self.get_logger().info('waiting for server...')
 #Send goal and wait for result
         self._action_client.wait_for_server()
         self._send_goal_future = self._action_client.send_goal_async(msg)
@@ -74,20 +74,19 @@ class FollowWaypointsClient(Node):
 #Get response on goal sent
     def response_callback(self,future):
         goal_handle = future.result()
-        self.get_logger().info("goal recieved")
+        self.get_logger().info("Goal received")
         self._get_result_future = goal_handle.get_result_async()
-        self._get_result_future.add_done_callback(self.get_result_callback)
+        self._get_result_future.add_done_callback(self.result_callback)
 
 #Respond to action completed
     def result_callback(self,future):
 #Publlish trigger message
-        msg = Bool
-        msg.data = True
+        msg = Empty()
         self.get_logger().info("Publishing trigger...")
         self.publisher.publish(msg)
 #Kill process displaying waypoints
         self.p.kill()
-        self.get_logger().info("goal achieved")
+        self.get_logger().info("Goal achieved")
 #Kill node
         rclpy.shutdown()
 
