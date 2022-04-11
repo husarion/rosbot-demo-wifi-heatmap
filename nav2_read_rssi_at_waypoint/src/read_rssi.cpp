@@ -9,8 +9,11 @@ int read_rssi(){
         for(int i = 0;i < 2;i++){
             std::getline(rssi_file,str);
         }
+        if(str.length() < 29){
+            std::cout << "String error" << std::endl;
+            return -100;
+        }
         std::getline(rssi_file,str);
-        std::cout << str <<std::endl; //Debug!!!
         str = str.substr(29,3);
         rssi_file.close();
         return stoi(str);
