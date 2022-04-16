@@ -117,8 +117,13 @@ class FollowWaypointsClient(Node):
     def check_safety(self,waypoint:Waypoint):
         xbegin,xend = waypoint.x - self.collision_range,waypoint.x + self.collision_range
         ybegin,yend = waypoint.y - self.collision_range,waypoint.y + self.collision_range
-        for i in range(xbegin,xend + 1):
-            for j in range(ybegin,yend + 1):
+# Check if values doo not get out of bounds
+        if xbegin < 0 : xbegin = 0
+        if ybegin < 0 : ybegin = 0
+        if xend >= len(self.map) : xend = len(self.map) - 1
+        if yend >= len(self.map[0]) : yend = len(self.map[0]) - 1
+        for i in range(xbegin,xend+1):
+            for j in range(ybegin,yend+1):
                 if (self.map[i][j][0] == 205 or self.map[i][j][0] == 0):
                     self.map[waypoint.x][waypoint.y] = [255,0,0]
                     return False
