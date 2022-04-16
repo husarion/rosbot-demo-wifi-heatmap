@@ -1,13 +1,11 @@
 from collections import namedtuple
 import cv2
-from cv2 import INTER_CUBIC
 from matplotlib import pyplot as plt
 import matplotlib
 from matplotlib.colors import LinearSegmentedColormap
 import matplotlib.cm as cm
 import numpy as np
 import scipy.interpolate
-import colorsys
 
 RssiWaypoint = namedtuple('RssiWaypoint','x y rssi')
 
