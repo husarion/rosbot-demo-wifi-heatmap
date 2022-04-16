@@ -1,17 +1,15 @@
 from collections import namedtuple
 import cv2
-from cv2 import INTER_CUBIC
 from matplotlib import pyplot as plt
 import matplotlib
 from matplotlib.colors import LinearSegmentedColormap
 import matplotlib.cm as cm
 import numpy as np
 import scipy.interpolate
-import colorsys
 
 RssiWaypoint = namedtuple('RssiWaypoint','x y rssi')
 
-sample_data = [(RssiWaypoint(x,y,-(x*y)))for x in range(0,10,2) for y in range(0,20,4)]
+# sample_data = [(RssiWaypoint(x,y,-(x*y)))for x in range(0,10,2) for y in range(0,20,4)]
 
 #Custom red to green colormap
 cmapGR = LinearSegmentedColormap( #Colour map 
@@ -44,7 +42,7 @@ def rssi2rgb(data,cmap):
 #Main function generating continous heatmap from discrete rssi data
 def generate_heatmap(data,x_image_size,y_image_size,resolution_coeff):
     blank_image = np.zeros((x_image_size,y_image_size)) #Set empty image
-    for waypoint in sample_data:
+    for waypoint in data:
         blank_image[waypoint.x][waypoint.y] = waypoint.rssi #DEBUG mark datapoints
     
     # rgb_blank_image = rssi2rgb(blank_image,cmapGR)
@@ -83,7 +81,7 @@ def generate_heatmap(data,x_image_size,y_image_size,resolution_coeff):
 # DEBUG
     return rgb_resized_interp_data
 
-generate_heatmap(sample_data,10,20,5)
+# generate_heatmap(sample_data,10,20,5)
 
 
 
