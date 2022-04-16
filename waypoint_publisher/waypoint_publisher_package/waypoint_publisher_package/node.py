@@ -86,7 +86,7 @@ class FollowWaypointsClient(Node):
         self.publisher.publish(msg)
 #Kill process displaying waypoints
         self.p.kill()
-        self.get_logger().info("Goal achieved")
+        self.get_logger().info("Goal achieved, shutting down...")
 #Kill node
         rclpy.shutdown()
 

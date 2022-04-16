@@ -33,9 +33,8 @@ class HeatmapGenerator(Node):
 
     def rssi_data_callback(self,msg:RssiAtWaypoint):
         x = int((msg.coordinates.x - self.map_origin.x) / self.map_resolution) #Change coordinates from real to map's
-        y = (len(self.map[0]) - 1)  -  int((msg.coordinates.y - self.map_origin.y) / self.map_resolution) #Origin is set at left-bottom corner, so subtraction from map size is needed
-        data = RssiWaypoint(msg.coordinates.x,msg.coordinates.y,msg.rssi)
-        data = RssiWaypoint(msg.coordinates.x,msg.coordinates.y,msg.rssi)
+        y = (len(self.map))  -  int((msg.coordinates.y - self.map_origin.y) / self.map_resolution) #Origin is set at left-bottom corner, so subtraction from map size is needed
+        data = RssiWaypoint(x,y,msg.rssi)
         self.rssi_data.append(data) # store data sent from topic
     
     def trigger_callback(self,msg):
