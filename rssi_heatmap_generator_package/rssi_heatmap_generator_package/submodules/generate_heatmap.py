@@ -1,21 +1,20 @@
 from collections import namedtuple
 import cv2
+from cv2 import INTER_CUBIC
 from matplotlib import pyplot as plt
+import matplotlib
 from matplotlib.colors import LinearSegmentedColormap
+import matplotlib.cm as cm
 import numpy as np
 import scipy.interpolate
+import colorsys
 
 RssiWaypoint = namedtuple('RssiWaypoint','x y rssi')
 
-sample_data = [(RssiWaypoint(x,y,-(x*y*2)))for x in range(0,10,2) for y in range(0,20,4)]
+sample_data = [(RssiWaypoint(x,y,-(x*y)))for x in range(0,10,2) for y in range(0,20,4)]
 
-def generate_heatmap(data,x_image_size,y_image_size,resolution_coeff):
-    blank_image = np.zeros((x_image_size,y_image_size,1)) #Set empty image
-
-    for waypoint in sample_data:
-        blank_image[waypoint.x][waypoint.y] = waypoint.rssi #DEBUG mark datapoints
-    
-    cmapGR = LinearSegmentedColormap( #Colour map 
+#Custom red to green colormap
+cmapGR = LinearSegmentedColormap( #Colour map 
     'GreenRed',
     {
         'red':  ((0.0, 1.0, 1.0),
@@ -31,6 +30,25 @@ def generate_heatmap(data,x_image_size,y_image_size,resolution_coeff):
                 (1.0, 0.0, 0.0))
     },)
 
+#Function generating rgb image based on rssi data array
+def rssi2rgb(data,cmap):
+    xsize,ysize = np.shape(data)[0], np.shape(data)[1]
+    norm = matplotlib.colors.Normalize(vmin=-100,vmax=0,clip = True) #Normalize data to (-100,0)
+    mapper = cm.ScalarMappable(norm = norm,cmap = cmap)
+    rgb_image = np.zeros((xsize,ysize,3))    
+    for i,_ in enumerate(data):
+        for j,point in enumerate(data[i]):
+            rgb_image[i][j] =  mapper.to_rgba(point)[: -1]
+    return rgb_image
+
+#Main function generating continous heatmap from discrete rssi data
+def generate_heatmap(data,x_image_size,y_image_size,resolution_coeff):
+    blank_image = np.zeros((x_image_size,y_image_size)) #Set empty image
+    for waypoint in sample_data:
+        blank_image[waypoint.x][waypoint.y] = waypoint.rssi #DEBUG mark datapoints
+    
+    # rgb_blank_image = rssi2rgb(blank_image,cmapGR)
+
     xdata,ydata,valdata = [],[],[] #Data arrays for interpolation
     for datapoint in data: #Fill data arrays with measurement data
         xdata.append(datapoint.x)
@@ -41,31 +59,33 @@ def generate_heatmap(data,x_image_size,y_image_size,resolution_coeff):
     xpoints = np.arange(0,x_image_size,1) #Set data arrays for interpolation according to image size 
     ypoints = np.arange(0,y_image_size,1)
     interp_data = f(xpoints,ypoints) #Interpolate over data arrays using f function
-#Ensure that none of interpolated values are out of bounds (-100,0)
-    for i,_ in enumerate(interp_data):
-        for j,_ in enumerate(interp_data[i]):
-            if interp_data[i][j] > 0: interp_data[i][j] = 0
-            if interp_data[i][j] < -100: interp_data[i][j] = -100
-
     interp_data = np.transpose(interp_data)
-    resized_interp_data = cv2.resize(interp_data,(resolution_coeff*y_image_size,resolution_coeff*x_image_size),interpolation=cv2.INTER_AREA)
-#DEBUG Show results
-    fig,axs = plt.subplots(2,2)
-    axs[0][0].imshow(blank_image,cmap = cmapGR) #Set colouring limits using vmax,vmin
-    axs[0][0].set_title('original')
-    axs[0][0].axis("off")
-    axs[0][1].imshow(interp_data,cmap = cmapGR) #Set colouring limits using vmax,vmin
-    axs[0][1].set_title('interpolation result')
-    axs[0][1].axis("off")   
-    axs[1][0].imshow(resized_interp_data,cmap = cmapGR) #Set colouring limits using vmax,vmin
-    axs[1][0].set_title('resized')
-    axs[1][0].axis("off")
-    axs[1][1].imshow(cv2.blur(resized_interp_data,(31,31)),cmap = cmapGR) #Set colouring limits using vmax,vmin
-    axs[1][1].set_title('smoothed out')
-    axs[1][1].axis("off")
-    plt.show()
-#DEBUG
-    return cv2.GaussianBlur(resized_interp_data,(31,31),0) # Add arg to set mask size ???
-
+    # rgb_interp_data = rssi2rgb(interp_data,cmapGR)
+#Resize and smoothe out image
+    resized_interp_data = cv2.resize(interp_data,(resolution_coeff*y_image_size,resolution_coeff*x_image_size),interpolation=cv2.INTER_CUBIC)
+    rgb_resized_interp_data = rssi2rgb(resized_interp_data,cmapGR)
+                                                            
+# DEBUG Show results
+    # fig,axs = plt.subplots(2,2)
+    # axs[0][0].imshow(interp_data,cmap = cmapGR) #Set colouring limits using vmax,vmin
+    # axs[0][0].set_title('original')
+    # axs[0][0].axis("off")
+    # axs[0][1].imshow(rgb_interp_data) #Set colouring limits using vmax,vmin
+    # axs[0][1].set_title('interpolation result')
+    # axs[0][1].axis("off")   
+    # axs[1][0].imshow(resized_interp_data,cmap = cmapGR) #Set colouring limits using vmax,vmin
+    # axs[1][0].set_title('resized')
+    # axs[1][0].axis("off")
+    # axs[1][1].imshow(rgb_resized_interp_data) #Set colouring limits using vmax,vmin
+    # axs[1][1].set_title('smoothed out')
+    # axs[1][1].axis("off")
+    # plt.show()
+# DEBUG
+    return rgb_resized_interp_data
 
 generate_heatmap(sample_data,10,20,5)
+
+
+
+
+
