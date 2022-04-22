@@ -11,7 +11,8 @@ RUN apt update && apt install -y \
         python3-pip \
         python3-colcon-common-extensions \
         ros-$ROS_DISTRO-slam-toolbox \
-        ros-$ROS_DISTRO-navigation2 && \
+        ros-$ROS_DISTRO-navigation2 \
+        ros-$ROS_DISTRO-rmw-fastrtps-cpp && \
     apt upgrade -y && \
     source /opt/ros/$ROS_DISTRO/setup.bash && \
     colcon build --symlink-install && \
