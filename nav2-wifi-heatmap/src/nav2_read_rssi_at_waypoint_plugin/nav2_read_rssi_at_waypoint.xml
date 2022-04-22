@@ -1,0 +1,5 @@
+<library path="nav2_read_rssi_at_waypoint">
+    <class type="nav2_read_rssi_at_waypoint::ReadRssiAtWaypoint" base_class_type="nav2_core::WaypointTaskExecutor">
+	  <description>"asdfasdsfdssfdsadsfdsa"</description>
+	</class>
+</library>
