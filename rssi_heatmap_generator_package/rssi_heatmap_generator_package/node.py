@@ -44,14 +44,29 @@ class HeatmapGenerator(Node):
         data = RssiWaypoint(x,y,int(msg.rssi))
         self.rssi_data.append(data) # store data sent from topic
     
-    def display_maps(self,map_with_waypoints,heatmap,final_map):
-        fig,axs = plt.subplots(1,3)
-        axs[0].imshow(map_with_waypoints)
-        axs[0].axis("off")
-        axs[1].imshow(heatmap)
-        axs[1].axis("off")
-        axs[2].imshow(final_map)
-        axs[2].axis("off")
+    def display_maps(self,map_with_waypoints,heatmap,final_map,rel_heatmap,rel_final_map):
+        fig,axs = plt.subplots(2,3)
+        axs[0][0].imshow(map_with_waypoints)
+        axs[0][0].axis("off")
+        axs[0][0].set_title("Map with waypoints")
+        axs[0][1].imshow(heatmap)
+        axs[0][1].axis("off")
+        axs[0][1].set_title("Heatmap")
+        axs[0][2].imshow(final_map)
+        axs[0][2].axis("off")
+        axs[0][2].set_title("Heatmap with lidar data")
+
+        axs[1][0].imshow(map_with_waypoints)
+        axs[1][0].axis("off")
+        axs[1][0].set_title("Map with waypoints")
+        axs[1][1].imshow(rel_heatmap)
+        axs[1][1].axis("off")
+        axs[1][1].set_title("relative heatmap")
+        axs[1][2].imshow(rel_final_map)
+        axs[1][2].axis("off")
+        axs[1][2].set_title("Relative heatmap with lidar data")
+
+
         plt.show()
     
     def trigger_callback(self,msg):
@@ -59,10 +74,12 @@ class HeatmapGenerator(Node):
         map_with_waypoints = add_waypoints(self.map,self.rssi_data,)
         print('generating heatmap...')
         heatmap = generate_heatmap(self.rssi_data,len(self.map),len(self.map[0]),1,filtered=False)
+        rel_heatmap = generate_heatmap(self.rssi_data,len(self.map),len(self.map[0]),1,filtered=True,relative=True)
         print('adding heatmap to map...')
         final_map = add_heatmap(self.map,heatmap)
+        rel_final_map = add_heatmap(self.map,rel_heatmap)
         print("maps generated, displaying")
-        self.p = Process(target=self.display_maps,args=(map_with_waypoints,heatmap,final_map,))
+        self.p = Process(target=self.display_maps,args=(map_with_waypoints,heatmap,final_map,rel_heatmap,rel_final_map))
         self.p.start()
 
 

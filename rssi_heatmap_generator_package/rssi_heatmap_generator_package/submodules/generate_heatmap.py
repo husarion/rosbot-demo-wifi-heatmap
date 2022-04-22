@@ -65,7 +65,7 @@ def generate_heatmap(data,x_image_size,y_image_size,resize_coeff,filtered:bool =
     if relative:
         rgb_interp_data = rssi2rgb(interp_data,cmapGR,minrssi,maxrssi)
     else:
-        rgb_interp_data = rssi2rgb(interp_data,cmapGR,minrssi,maxrssi)
+        rgb_interp_data = rssi2rgb(interp_data,cmapGR)
 # Add median filter
     if filtered:
         rgb_interp_data = cv2.medianBlur(rgb_interp_data,7)
