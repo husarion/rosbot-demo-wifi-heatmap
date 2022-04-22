@@ -7,7 +7,7 @@ services:
 
   # ROS Galactic
   mappers:
-    image: rssi_mappers_image:latest
+    image: rssi_mappers:latest
     tty: true
     privileged: true
     volumes:

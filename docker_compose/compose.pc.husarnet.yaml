@@ -6,7 +6,7 @@ version: "2.3"
 
 services:
 
-  waypoints:
+  mappers:
     network_mode: service:husarnet
     volumes:
       - ./dds-config.xml:/dds-config.xml
