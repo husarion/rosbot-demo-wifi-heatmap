@@ -1,0 +1,47 @@
+# Quick Start
+# $ docker compose -f compose.rosbot.yaml up
+
+version: "2.3"
+
+services:
+
+  # ROS Galactic
+  nav2:
+    image: rssi_map_nav2:latest
+    restart: unless-stopped
+    command: ros2 launch wifi_heatmap_nav2 bringup_both.launch.py
+
+  # ROS Noetic + ROS 2 Galactic
+  bridge:
+    image: ros:galactic-ros1-bridge
+    restart: unless-stopped
+    environment:
+      - ROS_MASTER_URI=http://ros-master:11311
+    command: ros2 run ros1_bridge dynamic_bridge
+
+  # ROS Master (using custom port in case Master is already running on host OS)
+  ros-master:
+    image: ros:melodic-ros-core
+    restart: unless-stopped
+    command: stdbuf -o L roscore
+
+  # ROS Melodic rosbot hardware layer
+  rosbot:
+    image: husarion/rosbot   
+    restart: unless-stopped
+    devices:
+      - /dev/ttyS4   # must match environment SERIAL_PORT 
+    environment:
+      - SERIAL_PORT=/dev/ttyS4 # default: ttyS1 - rosbot2.0; ttyS4 - rosbot2.0 `pro
+      - ROS_MASTER_URI=http://ros-master:11311
+    command: roslaunch --wait rosbot_description rosbot_docker.launch
+    
+  # ROS Melodic Rplidar
+  rplidar:
+    image: husarion/rplidar:latest
+    restart: unless-stopped
+    devices:
+      - /dev/ttyUSB0
+    environment:
+      - ROS_MASTER_URI=http://ros-master:11311
+    command: roslaunch --wait rplidar_ros rplidar_a3.launch # For Rosbot 2.0 PRO use roslaunch rplidar_ros rplidar_a3.launch

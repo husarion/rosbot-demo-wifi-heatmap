@@ -9,10 +9,10 @@ from nav2_common.launch import RewrittenYaml
 
 
 def generate_launch_description():
-    husarion_nav2 = get_package_share_directory('husarion_nav2')
+    wifi_heatmap_nav2 = get_package_share_directory('wifi_heatmap_nav2')
     use_sim_time = LaunchConfiguration('use_sim_time', default='false')
     nav2_conf = LaunchConfiguration('nav2_conf',
-                    default=husarion_nav2+'/config/nav2_params.yaml')
+                    default=wifi_heatmap_nav2+'/config/nav2_params.yaml')
 
     autostart = LaunchConfiguration('autostart')
     params_file = LaunchConfiguration('params')

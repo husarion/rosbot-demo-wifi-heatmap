@@ -1,0 +1,33 @@
+# Quick Start
+# $ xhost local:root
+# $ docker compose -f compose.pc.yaml up
+
+version: "2.3"
+services:
+
+  # ROS Galactic
+  mappers:
+    image: rssi_mappers_image:latest
+    tty: true
+    privileged: true
+    volumes:
+# folder for saving data      
+      - /home/s/map:/map
+      - /home/s/heatmaps:/heatmaps
+      - /tmp/.X11-unix:/tmp/.X11-unix:rw
+    environment:
+      - DISPLAY
+      - NVIDIA_VISIBLE_DEVICES=all
+      - NVIDIA_DRIVER_CAPABILITIES=all    
+
+  rviz:
+    image: husarion/rviz2
+    restart: unless-stopped
+    runtime: nvidia
+    volumes: 
+      - /tmp/.X11-unix:/tmp/.X11-unix:rw
+      - ./rosbot_pro.rviz:/root/.rviz2/default.rviz
+    environment:
+      - DISPLAY
+      - NVIDIA_VISIBLE_DEVICES=all
+      - NVIDIA_DRIVER_CAPABILITIES=all
