@@ -1,6 +1,6 @@
 #include <fstream>
 #include <string>
-
+// Function for reading rssi
 int read_rssi(){
     std::fstream rssi_file;
     rssi_file.open("/fakenet_/wireless",std::ios::in);
