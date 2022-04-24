@@ -1,14 +1,16 @@
 # rosbot-demo-wifi-heatmap
 Using ROSbot for automatically creation of a Wi-Fi signal strength (RSSI) heatmap of the given area.
+
 ## Setup
-1. Create husarnet network according to [this tutorial](https://husarnet.com/docs/begin-linux)\
+1. Create husarnet network according to [this tutorial](https://husarnet.com/docs/begin-linux)
 2. Clone contents of this repository to pc and ROSbot:
 ~~~ bash
 git clone https://github.com/husarion/rosbot-demo-wifi-heatmap.git
 ~~~
 
 3. Create '.env' file inside 'docker-compose' folder and paste your husarnet joincode
-On pc:
+
+    On pc:
     - create rssi mappers image:
     ~~~ bash
     docker build -t rssi_mappers:latest rosbot-demo-wifi-heatmap/mapper-packages
@@ -17,13 +19,13 @@ On pc:
     ~~~ bash
     xhost local:root
     ~~~
- On ROSbot:
+    On ROSbot:
     - create custom nav2 image:
     ~~~ bash
     docker build -t rssi_map_nav2:latest rosbot-demo-wifi-heatmap/nav2-wifi-heatmap
     ~~~
     - run bash script exposing /proc/net/wireless data to container:
-    ~~~
+    ~~~ bash
     chmod +x rosbot-demo-wifi-heatmap/fakenet.sh
     rosbot-demo-wifi-heatmap/fakenet.sh &
     ~~~
