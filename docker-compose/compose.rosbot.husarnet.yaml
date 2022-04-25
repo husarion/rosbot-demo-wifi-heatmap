@@ -33,3 +33,4 @@ services:
     environment:
       - HOSTNAME=rosbot
       - JOINCODE=${HUSARNET_JOINCODE}
+

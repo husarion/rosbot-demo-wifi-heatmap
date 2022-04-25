@@ -6,13 +6,6 @@ version: "2.3"
 
 services:
 
-  waypoints:
-    network_mode: service:husarnet
-    volumes:
-      - ./dds-config.xml:/dds-config.xml
-    environment:
-      - CYCLONEDDS_URI=file:///dds-config.xml
-
   rviz:
     network_mode: service:husarnet
     volumes:
