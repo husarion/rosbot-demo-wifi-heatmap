@@ -33,12 +33,12 @@ git clone https://github.com/husarion/rosbot-demo-wifi-heatmap.git
 ## Launch 
 On pc:
 ~~~ bash
-cd rosbot-demo-wifi-heatmap
+cd rosbot-demo-wifi-heatmap/docker-compose
 docker compose -f compose.pc.yaml -f compose.pc.husarnet.yaml up
 ~~~
 On rosbot:
 ~~~ bash
-cd rosbot-demo-wifi-heatmap
+cd rosbot-demo-wifi-heatmap/docker-compose
 docker compose -f compose.rosbot.yaml -f compose.rosbot.husarnet.yaml up
 ~~~
 ## Usage
