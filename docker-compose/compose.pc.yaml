@@ -6,8 +6,8 @@ version: "2.3"
 services:
 
   # ROS Galactic
-  mappers:
-    image: rssi_mappers:latest
+  waypoints:
+    image: waypoint_publisher_image:latest
     tty: true
     privileged: true
     volumes:
