@@ -1,5 +1,5 @@
 # rosbot-demo-wifi-heatmap
-Using ROSbot for automatically creation of a Wi-Fi signal strength (RSSI) heatmap of the given area.
+Using ROSbot for automatically creation of a Wi-Fi signal strength (RSSI) heatmap of the given area. Entire software is based on [rosbot-pro-demo](https://github.com/DominikN/rosbot-pro-demo.git)
 
 ## Setup
 1. Create husarnet network according to [this tutorial](https://husarnet.com/docs/begin-linux)
