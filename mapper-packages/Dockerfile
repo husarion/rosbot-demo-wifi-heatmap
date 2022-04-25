@@ -10,20 +10,20 @@ COPY rosbot_interfaces /ros2_ws/src/rosbot_interfaces
 
 
 RUN apt update && apt install -y \
-    python3-pip \
-    python3-colcon-common-extensions \
-    python3-tk \ 
-    python3-scipy \
-    python3-numpy \
-    python3-matplotlib \ 
+        python3-pip \
+        python3-colcon-common-extensions \
+        python3-tk \ 
+        python3-scipy \
+        python3-numpy \
+        python3-matplotlib \ 
 # install nav2 map_server
-    ros-$ROS_DISTRO-nav2-map-server \ 
-    ros-galactic-rmw-fastrtps-cpp && \
+        ros-$ROS_DISTRO-nav2-map-server \ 
+        ros-galactic-rmw-fastrtps-cpp && \
     apt upgrade -y && \
     source /opt/ros/$ROS_DISTRO/setup.bash && \
     colcon build --symlink-install && \ 
     apt-get remove -y --purge \
-    python3-pip \
+        python3-pip \
     python3-colcon-common-extensions && \
     apt-get autoremove -y && apt clean && \
     rm -rf /var/lib/apt/lists/*
