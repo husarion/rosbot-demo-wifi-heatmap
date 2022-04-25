@@ -7,9 +7,11 @@ services:
 
   # ROS Galactic
   nav2:
-    image: husarion/nav2:galactic-latest
+    image: nav2:latest
+    build: ../nav2-wifi-heatmap
     restart: unless-stopped
-    command: ros2 launch husarion_nav2 bringup_both.launch.py
+    tty: true
+    command: ros2 launch wifi_heatmap_nav2 bringup_both.launch.py
 
   # ROS Noetic + ROS 2 Galactic
   bridge:
