@@ -1,5 +1,5 @@
 #ROS
-from matplotlib import pyplot as plt
+from cv2 import imshow
 import rclpy
 from rclpy.node import Node
 from rosbot_interfaces.msg import RssiAtWaypoint
@@ -13,6 +13,10 @@ import tkinter
 import numpy as np
 from multiprocessing import Process
 import datetime
+from matplotlib import gridspec, pyplot as plt
+import matplotlib
+from matplotlib.colors import LinearSegmentedColormap
+
 
 
 RssiWaypoint = namedtuple('RssiWaypoint','x y rssi')
@@ -48,46 +52,50 @@ class HeatmapGenerator(Node):
         self.rssi_data.append(data) # store data sent from topic
 
 #Method running in separate process
-    def display_maps(self,map_with_waypoints,heatmap,final_map,rel_heatmap,rel_final_map):
-        fig,axs = plt.subplots(2,3)
-        axs[0][0].imshow(map_with_waypoints)
-        axs[0][0].axis("off")
-        axs[0][0].set_title("Map with waypoints")
-        axs[0][1].imshow(heatmap)
-        axs[0][1].axis("off")
-        axs[0][1].set_title("Heatmap")
-        axs[0][2].imshow(final_map)
-        axs[0][2].axis("off")
-        axs[0][2].set_title("Heatmap with lidar data")
+    def display_maps(self,map_with_waypoints,heatmap,final_map,rel_heatmap,rel_final_map,rssi_bounds):
 
-        axs[1][0].imshow(map_with_waypoints)
-        axs[1][0].axis("off")
-        axs[1][0].set_title("Map with waypoints")
-        axs[1][1].imshow(rel_heatmap)
-        axs[1][1].axis("off")
-        axs[1][1].set_title("relative heatmap")
-        axs[1][2].imshow(rel_final_map)
-        axs[1][2].axis("off")
-        axs[1][2].set_title("Relative heatmap with lidar data")
+        fig1  = plt.figure()
+        fig1.suptitle("Absolute wifi rssi heatmap")
+        gs = gridspec.GridSpec(ncols=1, nrows=2, wspace=0.000001,hspace=0.35, height_ratios=[25,1])
+        ax1 = fig1.add_subplot(gs[0,0])
+        ax2 = fig1.add_subplot(gs[1,0])
+        norm1 = matplotlib.colors.Normalize(vmin = -100,vmax=0)
+        cb1 = matplotlib.colorbar.ColorbarBase(ax2, cmap=cmapGR,norm=norm1,orientation='horizontal')
+        ax1.imshow(final_map)
+        ax1.axis('off')
+
+        fig2  = plt.figure()
+        fig2.suptitle("Relative wifi rssi heatmap")
+        gs = gridspec.GridSpec(ncols=1, nrows=2, wspace=0.000001,hspace=0.35, height_ratios=[25,1])
+        ax1 = fig2.add_subplot(gs[0,0])
+        ax2 = fig2.add_subplot(gs[1,0])
+        norm1 = matplotlib.colors.Normalize(vmin= rssi_bounds[0], vmax= rssi_bounds[1])
+        cb1 = matplotlib.colorbar.ColorbarBase(ax2, cmap=cmapGR,norm=norm1,orientation='horizontal')
+        ax1.imshow(rel_final_map)
+        ax1.axis('off')
+
+        fig3  = plt.figure()
+        fig3.suptitle("Waypoints map")
+        plt.imshow(map_with_waypoints)
 
         plt.show()
-    
+# Method run when receiving trigger message
     def trigger_callback(self,msg):
         self.get_logger().info("adding waypoints to map...")
         map_with_waypoints = add_waypoints(self.map,self.rssi_data,)
         self.get_logger().info('generating heatmap...')
-        heatmap = generate_heatmap(self.rssi_data,len(self.map),len(self.map[0]),1,filtered=False)
-        rel_heatmap = generate_heatmap(self.rssi_data,len(self.map),len(self.map[0]),1,filtered=True,relative=True)
+        heatmap = generate_heatmap(self.rssi_data,len(self.map),len(self.map[0]),1,filtered=False)[0]
+        rel_heatmap,rssi_bounds = generate_heatmap(self.rssi_data,len(self.map),len(self.map[0]),1,filtered=True,relative=True)
         self.get_logger().info('adding heatmap to map...')
         final_map = add_heatmap(self.map,heatmap)
         rel_final_map = add_heatmap(self.map,rel_heatmap)
         self.get_logger().info("maps generated, displaying")
-        self.p = Process(target=self.display_maps,args=(map_with_waypoints,heatmap,final_map,rel_heatmap,rel_final_map))
+        self.p = Process(target=self.display_maps,args=(map_with_waypoints,heatmap,final_map,rel_heatmap,rel_final_map,rssi_bounds))
         self.p.start()
         self.get_logger().info("maps generated, displaying")
-        cv2.imwrite('/heatmaps/map_with_waypoints_{date}.jpg'.format(date = datetime.datetime.now),map_with_waypoints)
-        cv2.imwrite('/heatmaps/heatmap_{date}.jpg'.format(date = datetime.datetime.now),final_map)
-        cv2.imwrite('/heatmaps/rel_heatmap_{date}.jpg'.format(date = datetime.datetime.now),rel_final_map)
+        cv2.imwrite('/heatmaps/map_with_waypoints_{date}.jpg'.format(date = datetime.datetime.now()),map_with_waypoints)
+        cv2.imwrite('/heatmaps/heatmap_{date}.jpg'.format(date = datetime.datetime.now()),final_map)
+        cv2.imwrite('/heatmaps/rel_heatmap_{date}.jpg'.format(date = datetime.datetime.now()),rel_final_map)
 
 def main(args = None):
     rclpy.init(args=args)
