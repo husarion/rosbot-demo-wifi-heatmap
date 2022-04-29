@@ -93,9 +93,9 @@ class HeatmapGenerator(Node):
         self.p = Process(target=self.display_maps,args=(map_with_waypoints,heatmap,final_map,rel_heatmap,rel_final_map,rssi_bounds))
         self.p.start()
         self.get_logger().info("maps generated, displaying")
-        cv2.imwrite('/heatmaps/map_with_waypoints_{date}.jpg'.format(date = datetime.datetime.now()),map_with_waypoints)
-        cv2.imwrite('/heatmaps/heatmap_{date}.jpg'.format(date = datetime.datetime.now()),final_map)
-        cv2.imwrite('/heatmaps/rel_heatmap_{date}.jpg'.format(date = datetime.datetime.now()),rel_final_map)
+        cv2.imwrite('/heatmaps/map_with_waypoints_{date}.jpg'.format(date = datetime.datetime.now()),cv2.cvtColor(map_with_waypoints, cv2.COLOR_RGB2BGR))
+        cv2.imwrite('/heatmaps/heatmap_{date}.jpg'.format(date = datetime.datetime.now()),cv2.cvtColor(final_map, cv2.COLOR_RGB2BGR))
+        cv2.imwrite('/heatmaps/rel_heatmap_{date}.jpg'.format(date = datetime.datetime.now()),cv2.cvtColor(rel_final_map, cv2.COLOR_RGB2BGR))
 
 def main(args = None):
     rclpy.init(args=args)
