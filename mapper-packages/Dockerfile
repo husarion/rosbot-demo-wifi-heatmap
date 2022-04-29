@@ -7,6 +7,7 @@ WORKDIR /ros2_ws
 COPY waypoint_publisher_package /ros2_ws/src/waypoint_publisher_package
 COPY rssi_heatmap_generator_package /ros2_ws/src/rssi_heatmap_generator_package
 COPY rosbot_interfaces /ros2_ws/src/rosbot_interfaces
+COPY mappers_bringup /ros2_ws/src/mappers_bringup
 
 
 RUN apt update && apt install -y \
@@ -16,6 +17,7 @@ RUN apt update && apt install -y \
         python3-scipy \
         python3-numpy \
         python3-matplotlib \ 
+        python3-opencv \
 # install nav2 map_server
         ros-$ROS_DISTRO-nav2-map-server \ 
         ros-galactic-rmw-fastrtps-cpp && \
