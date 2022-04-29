@@ -21,9 +21,10 @@ RUN apt update && apt install -y \
 # install nav2 map_server
         ros-$ROS_DISTRO-nav2-map-server \ 
         ros-galactic-rmw-fastrtps-cpp && \
+    pip install --upgrade scipy && \
     apt upgrade -y && \
     source /opt/ros/$ROS_DISTRO/setup.bash && \
-    colcon build --symlink-install && \ 
+    colcon build --symlink-install && \
     apt-get remove -y --purge \
         python3-pip \
     python3-colcon-common-extensions && \
