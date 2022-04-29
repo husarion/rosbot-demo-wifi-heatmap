@@ -18,5 +18,6 @@ int read_rssi(){
         rssi_file.close();
         return stoi(str);
     } 
+    std::cout << "rssi not read" << std::endl;
     return 0;  
 }

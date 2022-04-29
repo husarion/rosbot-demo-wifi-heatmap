@@ -78,7 +78,6 @@ bool ReadRssiAtWaypoint::processAtWaypoint(
     }
     rssi_ = rssi_ /  measurements_counter;
     msg.rssi = rssi_;
-    RCLCPP_INFO(logger_,"rssi = %n", &rssi_);
     rssi_data_publisher->publish(msg);
     return true;
 }

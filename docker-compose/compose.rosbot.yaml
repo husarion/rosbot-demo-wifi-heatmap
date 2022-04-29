@@ -12,6 +12,10 @@ services:
     restart: unless-stopped
     tty: true
     command: ros2 launch wifi_heatmap_nav2 bringup_both.launch.py
+    volumes:
+      # - /home/husarion/rosbot-demo-wifi-heatmap/nav2-wifi-heatmap/src/nav2_read_rssi_at_waypoint_plugin:/ros2_ws/src/nav2_read_rssi_at_waypoint_plugin
+      - ~/fakenet_:/fakenet_
+    
     environment: 
       - RMW_IMPLEMENTATION=rmw_cyclonedds_cpp
 
