@@ -12,6 +12,8 @@ services:
     restart: unless-stopped
     tty: true
     command: ros2 launch wifi_heatmap_nav2 bringup_both.launch.py
+    environment: 
+      - RMW_IMPLEMENTATION=rmw_cyclonedds_cpp
 
   # ROS Noetic + ROS 2 Galactic
   bridge:
