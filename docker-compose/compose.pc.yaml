@@ -15,6 +15,7 @@ services:
     volumes: 
       - /home/s/map:/map
       - /home/s/heatmaps:/heatmaps
+      - /tmp/.X11-unix:/tmp/.X11-unix:rw
     environment:
       - DISPLAY
       - NVIDIA_VISIBLE_DEVICES=all
