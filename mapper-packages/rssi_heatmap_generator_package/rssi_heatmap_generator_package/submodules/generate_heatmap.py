@@ -7,6 +7,7 @@ from matplotlib.colors import LinearSegmentedColormap
 import matplotlib.cm as cm
 import numpy as np
 import scipy.interpolate
+from scipy.interpolate import RBFInterpolator
 from cmath import inf
 
 RssiWaypoint = namedtuple('RssiWaypoint','x y rssi')
@@ -54,7 +55,7 @@ def generate_heatmap(data,x_image_size,y_image_size,resize_coeff,filtered:bool =
 # Stack data into [N,2] dimension for RBFInterpolator 
     RBFdata = np.stack((np.array(xdata).ravel(),np.array(ydata).ravel()),-1)
 # Get interpolant
-    f = scipy.interpolate.RBFInterpolator(RBFdata,np.array(valdata).ravel())
+    f = RBFInterpolator(RBFdata,np.array(valdata).ravel())
 # Prepare data arrays to pass to f
     xpoints,ypoints = np.meshgrid(np.arange(0,x_image_size,1),np.arange(0,y_image_size,1))
     RBFpoints = np.stack((np.array(xpoints).ravel(),np.array(ypoints).ravel()),-1)
@@ -72,7 +73,7 @@ def generate_heatmap(data,x_image_size,y_image_size,resize_coeff,filtered:bool =
 # Resize image
     rgb_interp_data = cv2.resize(rgb_interp_data,(resize_coeff*y_image_size,resize_coeff*x_image_size),interpolation=cv2.INTER_CUBIC)
 
-    return rgb_interp_data
+    return rgb_interp_data,(minrssi,maxrssi)
 
 #Fuction for adding obsctacles from saved map to generated heatmap
 def add_heatmap(map,heatmap):
