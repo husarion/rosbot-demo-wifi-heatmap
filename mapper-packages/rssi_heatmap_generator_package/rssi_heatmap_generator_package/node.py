@@ -57,28 +57,45 @@ class HeatmapGenerator(Node):
         fig1  = plt.figure()
         fig1.suptitle("Absolute wifi rssi heatmap")
         gs = gridspec.GridSpec(ncols=1, nrows=2, wspace=0.000001,hspace=0.35, height_ratios=[25,1])
+
         ax1 = fig1.add_subplot(gs[0,0])
+        ax1.imshow(final_map)
+        xticks = ax1.get_xticks().tolist()
+        yticks = ax1.get_yticks().tolist()
+        xticks,yticks = [round(tic * self.map_resolution,2) for tic in xticks],[round(tic * self.map_resolution,2) for tic in yticks]
+        ax1.set_xticklabels(xticks)
+        ax1.set_yticklabels(yticks) 
+        ax1.set_xlabel("[m]")
+        ax1.set_ylabel("[m]")            
         ax2 = fig1.add_subplot(gs[1,0])
         norm1 = matplotlib.colors.Normalize(vmin = -100,vmax=0)
         cb1 = matplotlib.colorbar.ColorbarBase(ax2, cmap=cmapGR,norm=norm1,orientation='horizontal')
-        ax1.imshow(final_map)
-        ax1.axis('off')
+        ax2.set_title("RSSI [dBm]")
 
         fig2  = plt.figure()
         fig2.suptitle("Relative wifi rssi heatmap")
         gs = gridspec.GridSpec(ncols=1, nrows=2, wspace=0.000001,hspace=0.35, height_ratios=[25,1])
         ax1 = fig2.add_subplot(gs[0,0])
+        ax1.imshow(rel_final_map)
+        ax1.set_xticklabels(xticks)
+        ax1.set_yticklabels(yticks) 
+        ax1.set_xlabel("[m]")
+        ax1.set_ylabel("[m]")   
         ax2 = fig2.add_subplot(gs[1,0])
         norm1 = matplotlib.colors.Normalize(vmin= rssi_bounds[0], vmax= rssi_bounds[1])
         cb1 = matplotlib.colorbar.ColorbarBase(ax2, cmap=cmapGR,norm=norm1,orientation='horizontal')
-        ax1.imshow(rel_final_map)
-        ax1.axis('off')
+        ax2.set_title("RSSI [dBm]")     
 
         fig3  = plt.figure()
         fig3.suptitle("Waypoints map")
+        plt.xticks(xticks)
+        plt.yticks(yticks)
+        plt.xlabel("[m]")
+        plt.ylabel("[m]")
         plt.imshow(map_with_waypoints)
 
         plt.show()
+
 # Method run when receiving trigger message
     def trigger_callback(self,msg):
         self.get_logger().info("adding waypoints to map...")
@@ -93,9 +110,9 @@ class HeatmapGenerator(Node):
         self.p = Process(target=self.display_maps,args=(map_with_waypoints,heatmap,final_map,rel_heatmap,rel_final_map,rssi_bounds))
         self.p.start()
         self.get_logger().info("maps generated, displaying")
-        cv2.imwrite('/heatmaps/map_with_waypoints_{date}.jpg'.format(date = datetime.datetime.now()),cv2.cvtColor(map_with_waypoints, cv2.COLOR_RGB2BGR))
-        cv2.imwrite('/heatmaps/heatmap_{date}.jpg'.format(date = datetime.datetime.now()),cv2.cvtColor(final_map, cv2.COLOR_RGB2BGR))
-        cv2.imwrite('/heatmaps/rel_heatmap_{date}.jpg'.format(date = datetime.datetime.now()),cv2.cvtColor(rel_final_map, cv2.COLOR_RGB2BGR))
+        cv2.imwrite('/heatmaps/map_with_waypoints_{date}.png'.format(date = datetime.datetime.now()),cv2.cvtColor(map_with_waypoints, cv2.COLOR_RGB2BGR))
+        cv2.imwrite('/heatmaps/heatmap_{date}.png'.format(date = datetime.datetime.now()),cv2.cvtColor(final_map, cv2.COLOR_RGB2BGR))
+        cv2.imwrite('/heatmaps/rel_heatmap_{date}.png'.format(date = datetime.datetime.now()),cv2.cvtColor(rel_final_map, cv2.COLOR_RGB2BGR))
 
 def main(args = None):
     rclpy.init(args=args)
