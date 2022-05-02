@@ -1,4 +1,4 @@
-FROM ros:galactic-ros-core
+FROM husarion/ros:galactic-ros-core
 
 SHELL ["/bin/bash", "-c"]
 
