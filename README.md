@@ -37,4 +37,4 @@ docker compose -f compose.rosbot.yaml -f compose.rosbot.husarnet.yaml up
 3. After process is finished, heatmaps will be saved in folder selected as bind mounts in 'compose.pc.yaml' file from '/heatmaps' directory inside the container
 ## Results
 Here are results of rssi measurement in our office:
-
+![My Image](sample-images/Figure1.jpg)
