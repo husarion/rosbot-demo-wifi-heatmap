@@ -88,10 +88,6 @@ class HeatmapGenerator(Node):
 
         fig3  = plt.figure()
         fig3.suptitle("Waypoints map")
-        plt.xticks(xticks)
-        plt.yticks(yticks)
-        plt.xlabel("[m]")
-        plt.ylabel("[m]")
         plt.imshow(map_with_waypoints)
 
         plt.show()
