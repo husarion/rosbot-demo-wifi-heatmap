@@ -87,6 +87,7 @@ class HeatmapGenerator(Node):
         ax2.set_title("RSSI [dBm]")     
 
         fig3  = plt.figure()
+        plt.axis('off')
         fig3.suptitle("Waypoints map")
         plt.imshow(map_with_waypoints)
 
