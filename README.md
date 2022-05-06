@@ -16,7 +16,12 @@ git clone https://github.com/husarion/rosbot-demo-wifi-heatmap.git
     chmod +x rosbot-demo-wifi-heatmap/fakenet.sh
     rosbot-demo-wifi-heatmap/fakenet.sh &
     ~~~
-    
+5. On pc:
+   Run script enabling rviz:
+   ~~~ bash
+   xhost local:root
+   ~~~
+   
 ## Launch 
 On pc:
 ~~~ bash
