@@ -1,5 +1,5 @@
 # choose ROS distribudion based on build argument
-FROM husarion/ros:galactic-ros-core
+FROM husarion/nav2:galactic
 
 SHELL ["/bin/bash", "-c"]
 
@@ -9,20 +9,17 @@ COPY . .
 
 RUN apt update && apt install -y \
         python3-pip \
-        python3-colcon-common-extensions \
-        ros-$ROS_DISTRO-slam-toolbox \
-        ros-$ROS_DISTRO-navigation2 \
-        ros-$ROS_DISTRO-rmw-fastrtps-cpp && \
+        python3-colcon-common-extensions && \
     apt upgrade -y && \
     source /opt/ros/$ROS_DISTRO/setup.bash && \
-    colcon build --symlink-install
+    colcon build --symlink-install && \
     # make the image smaller
-    # apt-get remove -y --purge \
-    #     python3-pip \
-    #     python3-colcon-common-extensions && \
-    # apt-get autoremove -y && \
-    # apt clean && \
-    # rm -rf /var/lib/apt/lists/*
+    apt-get remove -y --purge \
+        python3-pip \
+        python3-colcon-common-extensions && \
+    apt-get autoremove -y && \
+    apt clean && \
+    rm -rf /var/lib/apt/lists/*
 ENV RMW_IMPLEMENTATION=rmw_fastrtps_cpp
 
 COPY ros_entrypoint.sh /

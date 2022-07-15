@@ -5,17 +5,26 @@ version: "2.3"
 
 services:
 
-  # ROS Galactic
+# ROS 2 Galactic
+
+  rplidar:
+    image: husarion/rplidar:galactic
+    restart: unless-stopped
+    devices:
+      - /dev/ttyUSB0
+    command: ros2 launch rplidar_ros2 rplidar_a3_launch.py
+
   nav2:
-    image: nav2:latest
+    image: nav2-wifi-heatmap
     build: ../nav2-wifi-heatmap
     restart: unless-stopped
     tty: true
-    command: ros2 launch wifi_heatmap_nav2 bringup_both.launch.py
     volumes:
       - ~/net_expose:/net_expose
     environment: 
       - RMW_IMPLEMENTATION=rmw_cyclonedds_cpp
+    command: ros2 launch husarion_nav2 navigation2_bringup.launch.py 
+
 
   # ROS Noetic + ROS 2 Galactic
   bridge:
@@ -42,12 +51,12 @@ services:
       - ROS_MASTER_URI=http://ros-master:11311
     command: roslaunch --wait rosbot_description rosbot_docker.launch
     
-  # ROS Melodic Rplidar
-  rplidar:
-    image: husarion/rplidar:latest
-    restart: unless-stopped
-    devices:
-      - /dev/ttyUSB0
-    environment:
-      - ROS_MASTER_URI=http://ros-master:11311
-    command: roslaunch --wait rplidar_ros rplidar_a3.launch # For Rosbot 2.0 PRO use roslaunch rplidar_ros rplidar_a3.launch
+  # # ROS Melodic Rplidar
+  # rplidar:
+  #   image: husarion/rplidar:latest
+  #   restart: unless-stopped
+  #   devices:
+  #     - /dev/ttyUSB0
+  #   environment:
+  #     - ROS_MASTER_URI=http://ros-master:11311
+  #   command: roslaunch --wait rplidar_ros rplidar_a3.launch # For Rosbot 2.0 PRO use roslaunch rplidar_ros rplidar_a3.launch
