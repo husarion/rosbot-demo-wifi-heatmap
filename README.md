@@ -13,8 +13,8 @@ git clone https://github.com/husarion/rosbot-demo-wifi-heatmap.git
 4.  On ROSbot:
     Run bash script exposing /proc/net/wireless data to container:
     ~~~ bash
-    chmod +x rosbot-demo-wifi-heatmap/fakenet.sh
-    rosbot-demo-wifi-heatmap/fakenet.sh &
+    chmod +x rosbot-demo-wifi-heatmap/net_expose.sh
+    rosbot-demo-wifi-heatmap/net_expose.sh &
     ~~~
 5. On pc:
    Run script enabling rviz:

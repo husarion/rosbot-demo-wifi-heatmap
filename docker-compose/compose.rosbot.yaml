@@ -13,7 +13,7 @@ services:
     tty: true
     command: ros2 launch wifi_heatmap_nav2 bringup_both.launch.py
     volumes:
-      - ~/fakenet_:/fakenet_
+      - ~/net_expose:/net_expose
     environment: 
       - RMW_IMPLEMENTATION=rmw_cyclonedds_cpp
 
@@ -33,7 +33,7 @@ services:
 
   # ROS Melodic rosbot hardware layer
   rosbot:
-    image: husarion/rosbot   
+    image: husarion/rosbot:melodic   
     restart: unless-stopped
     devices:
       - /dev/ttyS4   # must match environment SERIAL_PORT 
