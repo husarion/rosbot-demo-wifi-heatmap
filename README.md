@@ -8,7 +8,11 @@ Using ROSbot for automatically creation of a Wi-Fi signal strength (RSSI) heatma
 git clone https://github.com/husarion/rosbot-demo-wifi-heatmap.git
 ~~~
 
-3. Create '.env' file inside 'docker-compose' folder and paste your husarnet joincode
+3. Create '.env' file inside 'docker-compose' folder and paste your husarnet joincode and generate DDS config files:
+    ~~~
+    ./generate-vpn-config.sh
+    ~~~
+This will create `secrets` file, which you need to copy to the same directory on another device.
 
 4.  On ROSbot:
     Run bash script exposing /proc/net/wireless data to container:
