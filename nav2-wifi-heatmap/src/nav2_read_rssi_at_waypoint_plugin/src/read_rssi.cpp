@@ -1,23 +1,39 @@
 #include <fstream>
 #include <string>
+#include <iostream>
 // Function for reading rssi
 int read_rssi(){
     std::fstream rssi_file;
     rssi_file.open("/net_expose/wireless",std::ios::in);
     if (rssi_file.is_open()){
-        std::string str;
-        for(int i = 0;i < 2;i++){
-            std::getline(rssi_file,str);
+        std::string labels;
+        std::string values;
+        std::string line;
+        for(int i = 0;i <= 4;i++){
+            switch(i){
+                case 1:
+                    std::getline(rssi_file,labels);
+                    break;
+                case 2:
+                    std::getline(rssi_file,values);
+                    break;
+                default:
+                    std::getline(rssi_file,line);
+                    break;
+            }
         }
-        if(str.length() < 29){
-            std::cout << "String not loaded, skipping measurement" << std::endl;
+        // Find where 'level' occures
+        std::cout << values << std::endl;
+        std::cout << labels << std::endl;
+        if (values.empty()){
+            std::cout << "Skipping measurement" << std::endl;
             return 1;
         }
-        std::getline(rssi_file,str);
-        str = str.substr(29,3);
-        rssi_file.close();
-        return stoi(str);
+        std::size_t level_idx = labels.find("level",0);
+        int rssi = std::stoi(values.substr(level_idx,4));
+        std::cout << rssi << std::endl; 
+    return rssi;
     } 
     std::cout << "rssi not read" << std::endl;
-    return 0;  
+    return 1; 
 }

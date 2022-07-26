@@ -14,14 +14,13 @@ services:
       - FASTRTPS_DEFAULT_PROFILES_FILE=/dds-config.xml
 
   rviz:
-  network_mode: service:husarnet-rviz
-  volumes: 
-    - ./secret/dds-config.xml:/dds-config.xml
-  environment:
-    - FASTRTPS_DEFAULT_PROFILES_FILE=/dds-config.xml
+    network_mode: service:husarnet
+    volumes: 
+      - ./secret/dds-config.xml:/dds-config.xml
+    environment:
+      - FASTRTPS_DEFAULT_PROFILES_FILE=/dds-config.xml
 
-      
-  husarnet-rviz:
+  husarnet:
     image: husarnet/husarnet
     volumes:
       - /var/lib/husarnet

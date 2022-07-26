@@ -20,24 +20,25 @@ services:
     image: nav2-wifi-heatmap
     build: ../nav2-wifi-heatmap
     restart: unless-stopped
-    tty: true
     volumes:
       - ~/net_expose:/net_expose
     command: >
       ros2 launch 
       nav2_bringup navigation_launch.py 
-    
+      params_file:=/ros2_ws/config/nav2_params.yaml
+
+
   slam-toolbox:
-  image: husarion/slam-toolbox:galactic 
-  restart: unless-stopped
-  container_name: slam-toolbox
-  volumes: 
-    - ./config/slam_params.yaml:/slam_params.yaml
-    - ./maps:/maps
-  command: >
-    ros2 launch 
-    slam_toolbox online_sync_launch.py 
-      slam_params_file:=/slam_params.yaml
+    image: husarion/slam-toolbox:galactic 
+    restart: unless-stopped
+    container_name: slam-toolbox
+    volumes: 
+      - ./config/slam_params.yaml:/slam_params.yaml
+      - ./maps:/maps
+    command: >
+      ros2 launch 
+      slam_toolbox online_sync_launch.py 
+        slam_params_file:=/slam_params.yaml
 
   bridge:
     image: husarion/ros:galactic-ros1-bridge
@@ -48,22 +49,22 @@ services:
       ros2 run 
       ros1_bridge dynamic_bridge
 
-ros-master:
-  image: ros:noetic-ros-core
-  restart: unless-stopped
-  command: stdbuf -o L roscore
+  ros-master:
+    image: ros:noetic-ros-core
+    restart: unless-stopped
+    command: stdbuf -o L roscore
 
-rosbot:
-  image: husarion/rosbot:noetic
-  restart: unless-stopped
-  devices:
-    - ${SERIAL_PORT} 
-  environment:
-    - SERIAL_PORT  
-    - ROS_MASTER_URI=http://ros-master:11311
-  command: >
-    roslaunch --wait 
-    rosbot_bringup rosbot_docker.launch
+  rosbot:
+    image: husarion/rosbot:noetic
+    restart: unless-stopped
+    devices:
+      - ${SERIAL_PORT} 
+    environment:
+      - SERIAL_PORT  
+      - ROS_MASTER_URI=http://ros-master:11311
+    command: >
+      roslaunch --wait 
+      rosbot_bringup rosbot_docker.launch
 
 
   
