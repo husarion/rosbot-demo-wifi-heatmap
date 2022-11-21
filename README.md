@@ -21,7 +21,7 @@ This will create `secrets` file, which you need to copy to the same directory on
     rosbot-demo-wifi-heatmap/net_expose.sh &
     ~~~
 5. On pc:
-   Run script enabling rviz:
+   Run script enabling RViz:
    ~~~ bash
    xhost local:root
    ~~~
